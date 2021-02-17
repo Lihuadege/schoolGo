@@ -11,6 +11,7 @@
     ,"sex": "男"
     ,"ip": "1111111"
     ,"jointime": 20171204
+  ,"LAY_CHECKED": true
   },{
     "id": "002"
     ,"username": "用户-2"
@@ -29,7 +30,6 @@
     ,"sex": "女"
     ,"ip": "1111111"
     ,"jointime": 20171011
-    ,"LAY_CHECKED": true
   },{
     "id": "004"
     ,"username": "用户-4"
@@ -120,7 +120,6 @@
     ,"sex": "女"
     ,"ip": "1111111"
     ,"jointime": 20171204
-    ,"LAY_CHECKED": true
   },{
     "id": "014"
     ,"username": "用户-14"

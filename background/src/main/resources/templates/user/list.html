@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html  lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>layuiAdmin 网站用户</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" href="../style/admin.css" th:href="@{/style/admin.css}" media="all">
+    <script src="../layui/layui.js" th:src="@{/layui/layui.js}"></script>
+    <script src="../layui/jquery-1.8.3.js" th:src="@{/layui/jquery-1.8.3.js}"></script>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+
+
+            <!--表格头-->
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">用户名</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="loginName" name="loginName" placeholder="请输入" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">手机号</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="phoneNum" name="phoneNum" placeholder="请输入" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">邮箱</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="email" name="email" placeholder="请输入" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-admin" data-type="search_table">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn layuiadmin-btn-admin" data-type="batchDel">批量封禁</button>
+                <button class="layui-btn layuiadmin-btn-admin" data-type="add">添加</button>
+            </div>
+
+
+            <table id="myTable" lay-filter="myTable"></table>
+
+
+            <script type="text/html" id="imgTpl">
+                <img style="display: inline-block; width: 60%; height: 100%; border-radius: 50%" src={{ d.headImg }}>
+            </script>
+            <script type="text/html" id="table_admin">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                        class="layui-icon layui-icon-edit"></i>编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                        class="layui-icon layui-icon-delete"></i>封禁</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<!--  <script src="../layui/layui.js"></script>  -->
+<script>
+    layui.config({
+        base: '../'
+    }).use(['jquery', 'layer', 'table'], function () {
+        var $ = layui.$
+            , jquery = layui.jquery
+            , table = layui.table
+            , layer = layui.layer;
+
+        table.render({
+            elem: '#myTable',
+            url: '/listManager', //数据接口
+            title: '用户列表',
+            height: 472,
+            page: true,
+            limit: 10,
+            limits: [10, 20, 30],
+            cols: [
+                [ //表头
+                    {type: 'checkbox', fixed: 'left'},
+                    {field: 'id', title: '编号', width: 100},
+                    {field: 'loginName', title: '登录名', width: 110},
+                    {field: 'userName', title: '用户名', width: 180},
+                    {field: 'phoneNum', title: '手机号', width: 150},
+                    {field: 'email', title: '邮箱', width: 240},
+                    {field: 'userAreaId', title: '学校id,具体点击编辑查看', width: 200},
+                    {
+                        field: 'status', title: '状态', width: 200
+                        , templet: function (row) {
+                            if (row.status == 1) {
+                                return '<a class="layui-btn layui-btn-success layui-btn-xs">正常使用</a>';
+                            } else {
+                                return '<a class="layui-btn layui-btn-success layui-btn-xs">已封禁</a>';
+                            }
+                        }
+                    },
+                    {field: 'headImg', title: '头像', width: 80, toolbar: "#imgTpl"},
+                    {fixed: 'right', title: '操作', width: 240, align: 'center', toolbar: '#table_admin'}
+                ]
+            ],
+            //用于搜索结果重载
+            id: 'tableReload'
+        })
+        //事件
+        var active = {
+            //搜索功能
+            search_table: function () {
+                let loginName = $('#loginName');
+                let phoneNum = $('#phoneNum');
+                let email = $('#email')
+
+                table.reload('tableReload', {
+                    method: 'post',
+                    page: {
+                        curr: 1
+                    },
+                    where: {
+                        loginName: loginName.val(),
+                        phoneNum: phoneNum.val(),
+                        email: email.val(),
+                    }
+                })
+            },
+            //添加用户功能
+            add: function () {
+                layer.open({
+                    type: 2,
+                    title: '添加用户',
+                    content: '/toAddManager',
+                    area: ['500px', '550px'],
+                });
+            },
+            //批量删除功能
+            batchDel: function () {
+                var checkAll = table.checkStatus('tableReload')
+                    , checkData = checkAll.data; //得到选中的数据
+
+                if (checkData.length === 0) {
+                    return layer.msg('请选择数据');
+                }
+
+                layer.confirm('确定删除吗？', function () {
+                    let checkId = new Array();
+                    for(let i = 0; i < checkData.length; i ++){
+                        checkId[i] = checkData[i].id;
+                    }
+                    console.log(checkId);
+
+                    $.ajax({
+                        url: '/delManager',
+                        dataType: 'json',
+                        type: "post",
+                        contentType: 'application/json',
+                        data: JSON.stringify(checkId),
+                        success: function (res) {
+                            if(res.code == 0){
+                                table.reload('tableReload');
+                            }
+                            layer.msg(res.msg);
+                        }
+                    })
+                });
+
+            }
+
+        };
+
+        $('.layui-btn.layuiadmin-btn-admin').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        function edit(data) {
+            layer.open({
+                type: 2,
+                title: '修改用户信息',
+                area: ['500px', '550px'],
+                content: '/toAddManager?id=' + data.id,
+            });
+        }
+
+        function del(data,object,index) {
+            let checkId = new Array();
+            checkId[0] = data.id;
+            $.ajax({
+                url: '/delManager',
+                dataType: 'json',
+                type: "post",
+                contentType: 'application/json',
+                data: JSON.stringify(checkId),
+                success: function (res) {
+                    if(res.code == 0){
+                        object.del();
+                        layer.close(index);
+                    }
+                    layer.msg(res.msg);
+                }
+            })
+        }
+
+        table.on('tool(myTable)',function (object) {
+            let data = object.data;
+            let event = object.event;
+
+            if(event == 'edit'){
+                edit(data);
+            }else if(event == 'del'){
+                layer.confirm('真的要封禁吗',function (index) {
+                    del(data,object,index);
+                })
+            }
+        })
+
+    });
+</script>
+</body>
+</html>

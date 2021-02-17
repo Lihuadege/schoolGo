@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>layuiAdmin 网站用户 iframe 框</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
+    <script src="../layui/layui.js" th:src="@{/layui/layui.js}"></script>
+</head>
+<body>
+
+<div class="layui-form" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin"
+     style="padding: 20px 0 0 0;">
+
+    <input type="hidden" name="id" th:value="${user == null}?'':${user.id}" />
+    <input type="hidden" name="isSuperManager" th:value="${user == null}?'':${user.isSuperManager}" />
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">登录名</label>
+        <div class="layui-input-inline">
+            <input type="text" name="loginName" lay-verify="required" placeholder="请输入登录名" autocomplete="off"
+                   class="layui-input" th:value="${user == null}?'':${user.loginName}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-inline">
+            <input type="text" name="userName" lay-verify="required" placeholder="请输入用户名" autocomplete="off"
+                   class="layui-input" th:value="${user == null}?'':${user.userName}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">手机号码</label>
+        <div class="layui-input-inline">
+            <input type="text" name="phoneNum" lay-verify="phone" placeholder="请输入手机号码" autocomplete="off"
+                   class="layui-input" th:value="${user == null}?'':${user.phoneNum}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">邮箱</label>
+        <div class="layui-input-inline">
+            <input type="text" name="email" lay-verify="email" placeholder="请输入邮箱" autocomplete="off"
+                   class="layui-input" th:value="${user == null}?'':${user.email}">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">所在地</label>
+        <div class="layui-input-block">
+            <div class="layui-inline">
+                <select name="parentArea" id="parentArea" lay-verify="required" lay-filter="changeSchool">
+                    <option th:if="${user == null}" value="0">请选择地区</option>
+                    <option th:each="parent : ${session.parentArea}" th:value="${parent.id}" th:text="${parent.name}"
+                            th:selected="${parentId != null and parentId == parent.id}"></option>
+                </select>
+            </div>
+            <div class="layui-inline">
+                <select name="userAreaId" id="userAreaId" lay-verify="required" >
+                    <option th:if="${user == null}" value="0">请选择学校</option>
+                    <!--此处表单select项回显默认选项勾选，怎么都不能成功，最后发现是对比数据类型不一致导致-->
+                    <option th:if="${user != null && user.userAreaId gt 34}"
+                            th:each="school : ${schoolInfos}" th:value="${school.id}" th:text="${school.name}"
+                            th:selected="${user != null and user.userAreaId.toString() == school.id}"></option>
+
+
+                    <option th:if="${user != null && user.userAreaId lt 35}" value="0" selected>superManager,请勿修改</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button th:text="${user != null}?'立即修改':'立即添加'" class="layui-btn" lay-submit="" lay-filter="addManager">立即添加</button>
+            <button th:if="${user == null}" type="reset" id="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use(['form', 'jquery'], function () {
+        var $ = layui.$
+            , form = layui.form
+            , $ = layui.jquery;
+        form.on('submit(addManager)', function (data) {
+            
+            $.post({
+                url: '/addManager',
+                data: data.field,
+                success: function (res) {
+                    if (res.code == 0) {
+                        layer.msg(res.msg);
+                        layer.alert(res.msg,function () {
+                            window.parent.location.reload();
+                            parent.layer.close(index);
+                        })
+                    }else {
+                        layer.msg(res.msg);
+                    }
+                }
+            });
+            return false;
+        })
+
+        $("#reset").click(function () {
+            $("input").val("");
+        })
+
+        //当更新省的信息，触发函数，更新学校信息
+        form.on('select(changeSchool)',function (object) {
+            //获取地区省份选择的id值
+            let parentId = $("#parentArea").val();
+            //ajax请求服务器，获得下属学校列表
+            $.post({
+                url: '/listSchools',
+                data: {parentId: parentId},
+                success: function (res) {
+                    if(res.code == 0){
+                        //获取学校对象
+                        let schoolEle = $("#userAreaId");
+                        //清空学校列表值
+                        schoolEle.get(0).options.length=0;
+                        let schools = res.data;
+                        //遍历学校列表，将每个学校信息添加其中
+                        $(schools).each(function (i,n) {
+                            //标签追加
+                            schoolEle.append("<option value='" + n.id  + "'>" + n.name + "</option>");
+                            //刷新表单域
+                            form.render();
+                        })
+                    }else {
+                        layer.msg(res.msg);
+                    }
+                }
+            })
+        })
+
+        // layui.$('#schoolId').on('click', function () {
+        // });
+
+    })
+</script>
+</body>
+</html>

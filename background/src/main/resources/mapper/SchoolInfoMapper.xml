@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.li.schoolGo.mapper.SchoolInfoMapper">
+    <resultMap id="schools" type="com.li.schoolGo.bean.SchoolInfo">
+        <id property="id" column="id"></id>
+        <result property="parentId" column="parent_id"></result>
+        <result property="name" column="name"></result>
+    </resultMap>
+
+    <select id="getSchoolInfoListByUserAreaId" resultMap="schools">
+         SELECT a.id, a.parent_id, a.`name`
+         FROM school_info a JOIN (SELECT parent_id AS bid from school_info WHERE id=#{userAreaId}) b
+         ON b.bid = a.parent_id
+    </select>
+
+</mapper>

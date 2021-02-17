@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html  lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>layuiAdmin 网站用户</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" href="../style/admin.css" th:href="@{/style/admin.css}" media="all">
+    <script src="../layui/layui.js" th:src="@{/layui/layui.js}"></script>
+    <script src="../layui/jquery-1.8.3.js" th:src="@{/layui/jquery-1.8.3.js}"></script>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+
+
+            <!--表格头-->
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">用户名</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="loginName" name="loginName" placeholder="请输入" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">手机号</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="phoneNum" name="phoneNum" placeholder="请输入" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">邮箱</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="email" name="email" placeholder="请输入" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-admin" data-type="search_table">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="layui-card-body">
+
+            <table id="myTable" lay-filter="myTable"></table>
+
+
+            <script type="text/html" id="imgTpl">
+                <img style="display: inline-block; width: 60%; height: 100%; border-radius: 50%" src={{ d.headImg }}>
+            </script>
+            <script type="text/html" id="table_admin">
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                        class="layui-icon layui-icon-delete"></i>解封</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<!--  <script src="../layui/layui.js"></script>  -->
+<script>
+    layui.config({
+        base: '../'
+    }).use(['jquery', 'layer', 'table'], function () {
+        var $ = layui.$
+            , jquery = layui.jquery
+            , table = layui.table
+            , layer = layui.layer;
+
+        table.render({
+            elem: '#myTable',
+            url: '/listDelManager', //数据接口
+            title: '用户列表',
+            height: 472,
+            page: true,
+            limit: 10,
+            limits: [10, 20, 30],
+            cols: [
+                [ //表头
+                    {field: 'id', title: '编号', width: 100},
+                    {field: 'loginName', title: '登录名', width: 110},
+                    {field: 'userName', title: '用户名', width: 180},
+                    {field: 'phoneNum', title: '手机号', width: 180},
+                    {field: 'email', title: '邮箱', width: 240},
+                    {field: 'userAreaId', title: '学校id,具体点击编辑查看', width: 200},
+                    {
+                        field: 'status', title: '状态', width: 200
+                        , templet: function () {
+                            return '<a class="layui-btn layui-btn-success layui-btn-xs">已封禁</a>'
+                        }
+                    },
+                    {field: 'headImg', title: '头像', width: 80, toolbar: "#imgTpl"},
+                    {fixed: 'right', title: '操作', width: 240, align: 'center', toolbar: '#table_admin'}
+                ]
+            ],
+            //用于搜索结果重载
+            id: 'tableReload'
+        })
+
+        var active = {
+            //搜索功能
+            search_table: function () {
+                let loginName = $('#loginName');
+                let phoneNum = $('#phoneNum');
+                let email = $('#email')
+
+                table.reload('tableReload', {
+                    method: 'post',
+                    page: {
+                        curr: 1
+                    },
+                    where: {
+                        loginName: loginName.val(),
+                        phoneNum: phoneNum.val(),
+                        email: email.val(),
+                    }
+                })
+            }
+        }
+
+        $('.layui-btn.layuiadmin-btn-admin').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        table.on('tool(myTable)',function (object) {
+            let data = object.data;
+            let checkId = data.id;
+            $.ajax({
+                url: '/undelManager',
+                type: "post",
+                data: {checkId: checkId},
+                success: function (res) {
+                    if(res.code == 0){
+                        layer.msg(res.msg);
+                        object.del();
+                        layer.close(index);
+                    }
+                    layer.msg(res.msg);
+                }
+            })
+        })
+
+    });
+</script>
+</body>
+</html>

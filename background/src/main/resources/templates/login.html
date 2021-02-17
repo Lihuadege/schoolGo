@@ -75,7 +75,7 @@
                 let password = $('#LAY-user-login-password').val();
                 let verifyCode = $('#LAY-user-login-code').val();
                 //异步发送ajax请求验证
-                $.post('doLogin', {loginName:loginName,password:password,verifyCode:verifyCode},
+                $.post('doLogin', {loginName:loginName, password:password, verifyCode:verifyCode},
                     function(res){
                             console.log(res)
                             if(res.code == 0){
