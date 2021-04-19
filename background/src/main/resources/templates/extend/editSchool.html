@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>学校详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
+    <script src="../layui/layui.js" th:src="@{/layui/layui.js}"></script>
+</head>
+<body>
+
+<div class="layui-form" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin"
+     style="padding: 20px 0 0 0;">
+
+    <input type="hidden" name="id" th:value="${school == null}?'':${school.id}"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label">学校名称</label>
+        <div class="layui-input-inline">
+            <input type="text" name="name" lay-verify="required" placeholder="请输入学校名称" autocomplete="off"
+                   class="layui-input" th:value="${school == null}?'':${school.name}">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属地区</label>
+        <div class="layui-input-block">
+            <div class="layui-inline">
+                <select name="parentId" lay-verify="required">
+                    <option th:if="${school == null}" value="0">请选择地区</option>
+                    <option th:each="parent : ${session.parent}" th:value="${parent.id}" th:text="${parent.name}"
+                            th:selected="${school != null and school.parentId == parent.id}"></option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button th:text="${school != null}?'立即修改':'立即添加'" class="layui-btn" lay-submit="" lay-filter="addSchool">
+                立即添加
+            </button>
+            <button th:if="${school == null}" type="reset" id="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use(['form', 'jquery'], function () {
+        var $ = layui.$
+            , form = layui.form
+            , $ = layui.jquery;
+        form.on('submit(addSchool)', function (data) {
+
+            $.post({
+                url: '/addSchool',
+                data: data.field,
+                success: function (res) {
+                    if (res.code == 0) {
+                        layer.alert(res.msg, function () {
+                            window.parent.location.reload();
+                            parent.layer.close(index);
+                        })
+                    } else {
+                        layer.msg(res.msg);
+                    }
+                }
+            });
+            return false;
+        })
+
+        $("#reset").click(function () {
+            $("input").val("");
+        })
+
+    })
+</script>
+</body>
+</html>

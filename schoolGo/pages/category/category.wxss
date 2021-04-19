@@ -1,0 +1,17 @@
+/* pages/catagory/catagory.wxss */
+
+.container {
+    display: flex;
+    margin: 0;
+}
+
+.categoryContainer {
+    width: 180rpx;
+    height: 1110rpx;
+}
+
+.productContainer {
+    flex: 1;
+    height: 1110rpx;
+    width: 572rpx;
+}

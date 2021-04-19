@@ -1,0 +1,29 @@
+<van-empty
+ wx:if="{{isEmpty}}"
+ style="width: 95vw"
+ description="收藏夹为空"
+/>
+
+<view wx:else class="container">
+	<navigator
+	 class="goodsItem"
+	 wx:for="{{goodsList}}"
+	 wx:key="id"
+	 url="/pages/detail/detail?goods_id={{item.collectInfo.id}}"
+	>
+		<view class="imgContainer">
+			<image
+			 class="img"
+			 mode="widthFix"
+			 src="http://localhost:8080{{item.goodsHeadImg}}"
+			/>
+		</view>
+		<view class="rightDesc">
+			<view class="title">{{item.goodsTitle}}</view>
+			<view class="price">￥
+				<p class="boldPrice">{{item.goodsPrice}}</p>
+			</view>
+		</view>
+	</navigator>
+</view>
+

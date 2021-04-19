@@ -7,10 +7,12 @@ import com.li.schoolGo.service.SchoolInfoService;
 import com.li.schoolGo.service.SysUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -29,26 +31,27 @@ public class ManageController {
     SchoolInfoService schoolInfoService;
 
     @RequestMapping("toUndelManager")
-    public String toUndelManager(){
+    public String toUndelManager() {
         return "user/undel";
     }
 
     @RequestMapping("addManager")
     @ResponseBody
     public ResponseBean doAddManager(SysUser sysUser) {
-        if(sysUser.getId() == null || sysUser.getId().isEmpty()){
+        if (sysUser.getId() == null || sysUser.getId().isEmpty()) {
             //用户id为空，新增用户
             sysUser.setId(null);
-            String pwd = "123";
+            String pwd = "123456";
+            log.debug("新增用户" + sysUser);
             sysUser.setPassword(DigestUtils.md5Hex(pwd.getBytes()));
             int i = sysUserService.insertNewSysUser(sysUser);
-            if(i == 1){
+            if (i == 1) {
                 return ResponseBean.baseSuccess("新增成功");
             }
-        }else {
-        System.out.println(sysUser);
+        } else {
+            log.debug("修改用户" + sysUser);
             int i = sysUserService.updateManagerById(sysUser);
-            if(i == 1){
+            if (i == 1) {
                 return ResponseBean.baseSuccess("修改成功");
             }
         }
@@ -57,32 +60,33 @@ public class ManageController {
 
     @RequestMapping("listManager")
     @ResponseBody
-    public Map<String,Object> getManagers(@RequestParam(value = "page", defaultValue = "1") Integer pageNum,
-                                    @RequestParam(value = "limit", defaultValue = "10") Integer pageSize,
-                                    String loginName, String phoneNum, String email) {
-        Map<String,Object> resultMap = sysUserService.getAll(pageNum, pageSize, loginName, phoneNum, email);
+    public Map<String, Object> getManagers(@RequestParam(value = "page", defaultValue = "1") Integer pageNum,
+                                           @RequestParam(value = "limit", defaultValue = "10") Integer pageSize,
+                                           String loginName, String phoneNum, String email) {
+        Map<String, Object> resultMap = sysUserService.getAll(pageNum, pageSize, loginName, phoneNum, email);
 
-        resultMap.put("code",0);
-        if(resultMap.get("data") != null){
-            resultMap.put("msg","获取成功");
-        }else {
-            resultMap.put("msg","获取失败");
+        if (resultMap.get("data") != null) {
+            resultMap.put("code", 0);
+            resultMap.put("msg", "获取成功");
+        } else {
+            resultMap.put("code", 500);
+            resultMap.put("msg", "获取失败");
         }
         return resultMap;
     }
 
     @RequestMapping("listDelManager")
     @ResponseBody
-    public Map<String,Object> getDelManagers(@RequestParam(value = "page", defaultValue = "1") Integer pageNum,
-                                          @RequestParam(value = "limit", defaultValue = "10") Integer pageSize,
-                                          String loginName, String phoneNum, String email) {
-        Map<String,Object> resultMap = sysUserService.getAllDel(pageNum, pageSize, loginName, phoneNum, email);
+    public Map<String, Object> getDelManagers(@RequestParam(value = "page", defaultValue = "1") Integer pageNum,
+                                              @RequestParam(value = "limit", defaultValue = "10") Integer pageSize,
+                                              String loginName, String phoneNum, String email) {
+        Map<String, Object> resultMap = sysUserService.getAllDel(pageNum, pageSize, loginName, phoneNum, email);
 
-        resultMap.put("code",0);
-        if(resultMap.get("data") != null){
-            resultMap.put("msg","获取成功");
-        }else {
-            resultMap.put("msg","获取失败");
+        resultMap.put("code", 0);
+        if (resultMap.get("data") != null) {
+            resultMap.put("msg", "获取成功");
+        } else {
+            resultMap.put("msg", "获取失败");
         }
         return resultMap;
     }
@@ -105,7 +109,7 @@ public class ManageController {
 
     @RequestMapping("undelManager")
     @ResponseBody
-    public ResponseBean deUndelManager(String checkId){
+    public ResponseBean deUndelManager(String checkId) {
         Boolean res = sysUserService.undelManager(checkId);
 
         if (res) return ResponseBean.baseSuccess("解封成功");
@@ -135,7 +139,7 @@ public class ManageController {
                 //此处根据用户所属学校id查询出与该用户所属地区相同的所有学校
                 List<SchoolInfo> schoolInfos = schoolInfoService.getSchoolInfoListByUserAreaId(userAreaId);
                 SchoolInfo parent = schoolInfoService.getParentId(userAreaId);
-                request.setAttribute("parentId",parent.getParentId());
+                request.setAttribute("parentId", parent.getParentId());
 
                 request.setAttribute("schoolInfos", schoolInfos);
 

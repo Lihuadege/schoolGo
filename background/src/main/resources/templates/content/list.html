@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html  lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>文章管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" href="../style/admin.css" th:href="@{/style/admin.css}" media="all">
+    <script src="../layui/layui.js" th:src="@{/layui/layui.js}"></script>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+
+
+            <!--表格头-->
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">用户名</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="userNickName" name="userNickName" placeholder="请输入" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-admin" data-type="search_table">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="layui-card-body">
+
+
+            <table id="myTable" lay-filter="myTable"></table>
+
+
+            <script type="text/html" id="imgTpl">
+                <img style="display: inline-block; width: 45%; height: 100%; border-radius: 50%" src={{ d.userHeadImg }}>
+            </script>
+            <script type="text/html" id="table_admin">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail"><i
+                        class="layui-icon layui-icon-edit"></i>查看详情</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                        class="layui-icon layui-icon-delete"></i>删除文章</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<!--  <script src="../layui/layui.js"></script>  -->
+<script>
+    layui.config({
+        base: '../'
+    }).use(['jquery', 'layer', 'table'], function () {
+        var $ = layui.$
+            , jquery = layui.jquery
+            , table = layui.table
+            , layer = layui.layer;
+
+        table.render({
+            elem: '#myTable',
+            url: '/listArticle', //数据接口
+            title: '用户列表',
+            height: 472,
+            page: true,
+            limit: 10,
+            limits: [10, 20, 30],
+            cols: [
+                [ //表头
+                    {field: 'id', title: '文章id', width: 100},
+                    {field: 'userNickName', title: '用户名', width: 131},
+                    {field: 'userId', title: '用户id', width: 136},
+                    {field: 'userHeadImg', title: '用户头像', width: 97, align: "center", toolbar: "#imgTpl"},
+                    {field: 'createTime', title: '发布时间', width: 191, templet: "<div>{{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"},
+                    {field: 'commend', title: '点赞数', width: 129},
+                    {field: 'title', title: '标题', width: 120},
+                    {field: 'mainBody', title: '内容', width: 486},
+                    {fixed: 'right', title: '操作', width: 240, align: 'center', toolbar: '#table_admin'}
+                ]
+            ],
+            //用于搜索结果重载
+            id: 'tableReload'
+        })
+        //事件
+        var active = {
+            //搜索功能
+            search_table: function () {
+                let userNickName = $('#userNickName');
+
+                table.reload('tableReload', {
+                    method: 'post',
+                    page: {
+                        curr: 1
+                    },
+                    where: {
+                        userNickName: userNickName.val()
+                    }
+                })
+            },
+        };
+
+        $('.layui-btn.layuiadmin-btn-admin').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        function detail(data) {
+            layer.open({
+                type: 2,
+                title: '文章详情',
+                area: ['500px', '800px'],
+                content: '/toArticleDetail?id=' + data.id,
+            });
+        }
+
+        function del(data,object,index) {
+            let checkId = data.id;
+            $.ajax({
+                url: '/delArticle',
+                type: "post",
+                data: {checkId: checkId},
+                success: function (res) {
+                    if(res.code == 0){
+                        object.del();
+                        layer.close(index);
+                    }
+                    layer.msg(res.msg);
+                }
+            })
+        }
+
+        table.on('tool(myTable)',function (object) {
+            let data = object.data;
+            let event = object.event;
+
+            if(event == 'detail'){
+                detail(data);
+            }else if(event == 'del'){
+                layer.confirm('真的要删除吗',function (index) {
+                    del(data,object,index);
+                })
+            }
+        })
+
+    });
+</script>
+</body>
+</html>

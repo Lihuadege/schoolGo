@@ -1,0 +1,129 @@
+<tabs tabs="{{tabs}}" bind:itemChange="handleItemChange">
+	<block>
+		<view
+		 class="orderItem"
+		 wx:for="{{orderList}}"
+		 wx:key="id"
+		>
+			<view class="topItem">
+				<view class="avatar">
+					<image src="{{item.salerHeadImg}}" />
+				</view>
+				<view class="name">{{item.salerName}}</view>
+				<!-- <view class="status">{{item.status == 0?"待发货":"待收获"}}</view> -->
+				<view wx:if="{{item.status==0}}" class="status">待发货</view>
+				<view wx:if="{{item.status==1}}" class="status">待收货</view>
+				<view wx:if="{{item.status==2}}" class="status">已完成</view>
+			</view>
+			<view class="centerItem">
+				<view class="left">
+					<image
+					 class="headImg"
+					 src="{{item.goodsHeadImg}}"
+					 mode="widthFix"
+					/>
+				</view>
+				<view class="middle">{{item.goodsTitle}}</view>
+				<view class="right">
+					<view class="price">￥ {{item.price}}</view>
+					<view class="number">X {{item.tradeNum}}</view>
+					<view class="totalPrice">总价: ￥
+						<text class="block">{{item.price * item.tradeNum}}</text>
+					</view>
+				</view>
+			</view>
+			<view class="buttomItem">
+				<navigator class="" url="/pages/detail/detail?goods_id={{item.goodsId}}">
+					<view class="urlNav">商品详情 ></view>
+				</navigator>
+				<!-- <view class="operateBtn">{{item.status == 0?"":"确认收货"}}</view> -->
+				<view
+				 wx:if="{{item.status==0}}"
+				 bind:tap="cancelOrder"
+				 class="operateBtn"
+				>取消订单
+				</view>
+				<view
+				 wx:if="{{item.status==1}}"
+				 bind:tap="confirmReceive"
+				 data-id="{{item.id}}"
+				 class="operateBtn"
+				>确认收货
+				</view>
+				<view
+				 wx:if="{{item.status==2}}"
+				 bind:tap="deleteOrder"
+				 data-id="{{item.id}}"
+				 class="operateBtn"
+				>删除订单
+				</view>
+			</view>
+		</view>
+		<!--<view class="orderItem">
+			<view class="topItem">
+				<view class="avatar">
+					<image src="../../images/fangxing.png" />
+				</view>
+				<view class="name">艾希眼镜店</view>
+				<view class="status">待付款</view>
+			</view>
+			<view class="centerItem">
+				<view class="left">
+					<image
+					 class="headImg"
+					 src="../../images/fangxing.png"
+					 mode="widthFix"
+					/>
+				</view>
+				<view class="middle">中国华为</view>
+				<view class="right">
+					<view class="price">￥ 300</view>
+					<view class="number">X 2</view>
+					<view class="totalPrice">总价: ￥
+						<text class="block">600</text>
+					</view>
+				</view>
+			</view>
+			<view class="buttomItem">
+				<navigator class="" url="">
+					<view class="urlNav">商品详情 ></view>
+				</navigator>
+				<view class="operateBtn">确认收货</view>
+			</view>
+		</view>
+		<view class="orderItem">
+			<view class="topItem">
+				<view class="avatar">
+					<image src="../../images/fangxing.png" />
+				</view>
+				<view class="name">艾希眼镜店</view>
+				<view class="status">待付款</view>
+			</view>
+			<view class="centerItem">
+				<view class="left">
+					<image
+					 class="headImg"
+					 src="../../images/fangxing.png"
+					 mode="widthFix"
+					/>
+				</view>
+				<view class="middle">中国华为</view>
+				<view class="right">
+					<view class="price">￥ 300</view>
+					<view class="number">X 2</view>
+					<view class="totalPrice">总价: ￥
+						<text class="block">600</text>
+					</view>
+				</view>
+			</view>
+			<view class="buttomItem">
+				<navigator class="" url="">
+					<view class="urlNav">商品详情 ></view>
+				</navigator>
+				<view class="operateBtn">确认收货</view>
+			</view>
+		</view>-->
+	</block>
+	<view wx:if="{{!haveMore}}" class="noMore">没有更多了</view>
+</tabs>
+

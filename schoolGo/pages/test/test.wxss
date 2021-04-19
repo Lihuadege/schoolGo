@@ -1,0 +1,19 @@
+.userinfo {
+    margin-top: 300rpx;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.userinfo-avatar {
+    margin: 30rpx auto 2rpx auto;
+    width: 100rpx;
+    border-radius: 30rpx;
+    flex: 4;
+}
+
+.userinfo-nickname {
+    text-align: center;
+    flex: 1;
+}

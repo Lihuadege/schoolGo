@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>订单列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" href="../style/admin.css" th:href="@{/style/admin.css}" media="all">
+    <script src="../layui/layui.js" th:src="@{/layui/layui.js}"></script>
+    <script src="../layui/jquery-1.8.3.js" th:src="@{/layui/jquery-1.8.3.js}"></script>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+
+
+            <!--表格头-->
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">商品名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="goodsTitle" name="goodsTitle" placeholder="请输入" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-admin" data-type="search_table">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                    <button class="layui-btn layuiadmin-btn-admin" data-type="clear">
+                        重置搜索
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="layui-card-body">
+
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn layuiadmin-btn-admin" data-type="batchDeliver">批量删除</button>
+            </div>
+
+            <table id="myTable" lay-filter="myTable"></table>
+
+            <script type="text/html" id="table_admin">
+                <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="del"><i
+                        class="layui-icon layui-icon-engine"></i>删除订单</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use(['jquery', 'layer', 'table', 'form'], function () {
+        let $ = layui.jquery
+            , table = layui.table
+            , layer = layui.layer
+            , form = layui.form;
+
+        table.render({
+            elem: '#myTable',
+            url: '/listOrder?salerStatus=2', //数据接口
+            title: '订单列表',
+            height: 472,
+            size: 'lg',
+            page: true,
+            limit: 10,
+            limits: [10, 20, 30],
+            cols: [
+                [ //表头
+                    {type: 'checkbox', align: 'center', fixed: 'left'},
+                    {field: 'orderId', align: 'center', title: '订单号', width: 172},
+                    {field: 'goodsTitle', align: 'center', title: '商品名', width: 172},
+                    {field: 'purchaserName', align: 'center', title: '购买人名称', width: 116},
+                    {field: 'tradeNum', align: 'center', title: '购买数量', width: 96},
+                    {field: 'price', align: 'center', title: '单价', width: 115},
+                    {field: 'phoneNum', align: 'center', title: '收货人号码', width: 114},
+                    {field: 'tradeTime', align: 'center', title: '交易时间', width: 115},
+                    {field: 'tradeAddr', align: 'center', title: '交易地点', width: 192},
+                    {field: 'orderNote', title: '备注', width: 455},
+                    {fixed: 'right', title: '操作', width: 147, align: 'center', toolbar: '#table_admin'}
+                ]
+            ],
+            //用于搜索结果重载
+            id: 'tableReload'
+        });
+
+
+        //事件
+        var active = {
+            //搜索功能
+            search_table: function () {
+                let goodsTitle = $('#goodsTitle');
+
+                table.reload('tableReload', {
+                    method: 'get',
+                    page: {
+                        curr: 1
+                    },
+                    where: {
+                        goodsTitle: goodsTitle.val()
+                    }
+                })
+            },
+
+            clear: function () {
+                $('#goodsTitle').val('');
+                table.reload('tableReload')
+            },
+
+            //批量发货功能
+            batchDeliver: function () {
+                var checkAll = table.checkStatus('tableReload')
+                    , checkData = checkAll.data; //得到选中的数据
+
+                if (checkData.length === 0) {
+                    return layer.msg('请选择数据');
+                }
+
+                layer.confirm('确定要删除吗？', function () {
+                    let checkId = new Array();
+                    for (let i = 0; i < checkData.length; i++) {
+                        checkId[i] = checkData[i].id;
+                    }
+                    console.log(checkId);
+
+                    $.ajax({
+                        url: '/delOrder',
+                        dataType: 'json',
+                        type: "post",
+                        contentType: 'application/json',
+                        data: JSON.stringify(checkId),
+                        success: function (res) {
+                            if (res.code == 0) {
+                                table.reload('tableReload');
+                            }
+                            layer.msg(res.msg);
+                        }
+                    })
+                });
+            }
+
+        };
+
+        $('.layui-btn.layuiadmin-btn-admin').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        function del(data, object, index) {
+            let id = [data.id];
+            $.ajax({
+                url: '/delOrder',
+                dataType: 'json',
+                type: "post",
+                contentType: 'application/json',
+                data: JSON.stringify(id),
+                success: function (res) {
+                    if(res.code == 0){
+                        object.del();
+                        layer.close(index);
+                    }
+                    layer.msg(res.msg);
+                }
+            })
+        }
+
+        table.on('tool(myTable)', function (object) {
+            let data = object.data;
+            layer.confirm('真的要删除吗', function (index) {
+                del(data, object, index);
+            })
+        });
+    });
+</script>
+</body>
+</html>

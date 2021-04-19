@@ -1,0 +1,31 @@
+/* .tabs {} */
+
+.blank {
+    height: 80rpx;
+}
+
+.tabsTitle {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    width: 100vw;
+    height: 80rpx;
+    background-color: white;
+}
+
+.titleItem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    /* height: 75rpx; */
+}
+
+.active {
+    color: var(--themeColor);
+    border-bottom: 5rpx solid currentColor;
+}
+
+
+/* .tabsContent {} */

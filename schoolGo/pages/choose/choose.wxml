@@ -1,0 +1,12 @@
+<view class="notice">您好</view>
+<view class="notice">要查看订单</view>
+<view class="notice">请先选择您要查看订单的类型</view>
+<view class="pageContainer">
+	<navigator url="">
+		<view class="item">商家订单</view>
+	</navigator>
+	<navigator url="">
+		<view class="item">个人商品订单</view>
+	</navigator>
+</view>
+

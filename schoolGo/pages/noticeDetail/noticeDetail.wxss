@@ -1,0 +1,14 @@
+.container image{
+    width: 750rpx;
+    height: 380rpx;
+}
+
+.notice{
+    padding: 10rpx 20rpx 20rpx 20rpx;
+    display: block;
+}
+
+.noticeTime{
+    padding: 0 20rpx;
+    text-align: right;
+}

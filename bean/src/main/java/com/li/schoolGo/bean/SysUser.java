@@ -14,11 +14,13 @@ public class SysUser implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private String id;
 
     private String loginName;
 
     private Integer userAreaId;
+
+    private String userName;
 
     private String email;
 
@@ -30,5 +32,6 @@ public class SysUser implements Serializable {
 
     private Integer isSuperManager;
 
+    private String headImg;
 
 }

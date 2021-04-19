@@ -25,25 +25,25 @@
             <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-username"></label>
-                    <input type="text" name="loginName" id="LAY-user-login-username" lay-verify="required" placeholder="用户名" class="layui-input">
+                    <input type="text" name="loginName" id="LAY-user-login-username" lay-verify="required" placeholder="用户名" class="layui-input" value="lmz">
                 </div>
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
-                    <input type="password" name="password" id="LAY-user-login-password" lay-verify="required" placeholder="密码" class="layui-input">
+                    <input type="password" name="password" id="LAY-user-login-password" lay-verify="required" placeholder="密码" class="layui-input" value="123456">
                 </div>
-                <div class="layui-form-item">
+                <!--<div class="layui-form-item">
                     <div class="layui-row">
                         <div class="layui-col-xs7">
                             <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-code"></label>
                             <input type="text" name="vercode" id="LAY-user-login-code"  placeholder="图形验证码" class="layui-input">
-                        </div><!--lay-verify="required"-->
+                        </div>&lt;!&ndash;lay-verify="required"&ndash;&gt;
                         <div class="layui-col-xs5">
                             <div style="margin-left: 10px;">
                                 <img src="https://www.oschina.net/action/user/captcha" class="layadmin-user-login-codeimg" id="LAY-user-get-vercode">
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <div class="layui-form-item" style="margin-bottom: 20px;">
                     <a href="#" class="layadmin-user-jump-change layadmin-link" style="margin-top: 7px;">忘记密码？请联系管理员</a>
                 </div>
@@ -74,6 +74,9 @@
                 let loginName = $('#LAY-user-login-username').val();
                 let password = $('#LAY-user-login-password').val();
                 let verifyCode = $('#LAY-user-login-code').val();
+
+                let index = layer.load(3);
+
                 //异步发送ajax请求验证
                 $.post('doLogin', {loginName:loginName, password:password, verifyCode:verifyCode},
                     function(res){
@@ -85,6 +88,7 @@
                                     ,icon: 1
                                     ,time: 1000
                                 },function () {
+                                    layer.close(index);
                                     location.href = '/';
                                 })
                             }else{
@@ -109,10 +113,6 @@
             }
             if ($.trim(password) === '' || $.trim(password).length<=0){
                 layer.msg("密码不能为空");
-                return false;
-            }
-            if ($.trim(verifyCode).length <= 0){
-                layer.msg("验证码不能为空");
                 return false;
             }
             return true;

@@ -2,7 +2,7 @@ package com.li.schoolGo.controller;
 
 import com.li.schoolGo.bean.ResponseBean;
 import com.li.schoolGo.bean.SysUser;
-import com.li.schoolGo.Constant.TokenConst;
+import com.li.schoolGo.constant.TokenConst;
 import com.li.schoolGo.service.SysUserService;
 import com.li.schoolGo.util.CookieUtil;
 import com.li.schoolGo.util.IsAllow;
@@ -62,7 +62,7 @@ public class LoginController {
 
             Map<String,Object> map = new HashMap<>();
             map.put("userId",sysUser.getId());
-            map.put("nickName",sysUser.getLoginName());
+            map.put("nickName",sysUser.getUserName());
             String token = JwtUtil.encode(key, map);
 
             CookieUtil.setCookie(request,response, TokenConst.TOKEN_NAME, token, TokenConst.MAX_COOKIE_AGE, false);

@@ -1,0 +1,90 @@
+<view class="headContainer">
+	<block wx:if="{{isLogin}}">
+		<view class="imageContainer">
+			<image src="{{userInfo.avatarUrl}}" class="touxiang" />
+		</view>
+		<view class="rightContainer">
+			<view class="nikeName">{{userInfo.nickName}}</view>
+			<view class="personalized">{{userInfo.personalWords}}</view>
+		</view>
+	</block>
+	<block wx:else>
+		<button class="loginBtn" bindtap="userLogin">请登录</button>
+	</block>
+</view>
+
+<!--
+    思考个人中心需要什么功能？
+    优惠券功能去除； 
+    订单；关注的用户；收藏的商品；发布的文章；个人信息的修改；发布的商品管理；卖出的商品管理
+ -->
+<view class="space"></view>
+<view class="navContainer">
+
+	<navigator class="navItem" url="/pages/order/order">
+		<!--myOrder-->
+		<view class="iconfont icon-order myfont"></view>
+		<view class="text">我的订单</view>
+	</navigator>
+
+	<navigator class="navItem" url="#">
+		<!--release-->
+		<view class="iconfont icon-shangpinguanli myfont"></view>
+		<view class="text">商品发布</view>
+	</navigator>
+
+	<navigator class="navItem" url="#">
+		<!--onsaling-->
+		<view class="iconfont icon-xianzhijiaohuan myfont"></view>
+		<view class="text">在售闲置</view>
+	</navigator>
+
+	<navigator class="navItem" url="#">
+		<!--saled-->
+		<view class="iconfont icon-shouchu myfont"></view>
+		<view class="text">我卖出的</view>
+	</navigator>
+</view>
+
+<view class="line">.</view>
+<navigator url="/pages/goodsCollect/goodsCollect">
+	<view class="menuItem">
+		<view class="name">商品收藏</view>
+		<view class="iconfont icon-xiangyou next"></view>
+	</view>
+</navigator>
+
+<view class="line">.</view>
+<navigator url="#">
+	<view class="menuItem">
+		<view class="name">关注的人</view>
+		<view class="iconfont icon-xiangyou next"></view>
+	</view>
+</navigator>
+
+<view class="line">.</view>
+<navigator url="#">
+	<view class="menuItem">
+		<view class="name">完善个人信息</view>
+		<view class="iconfont icon-xiangyou next"></view>
+	</view>
+</navigator>
+
+<view class="line">.</view>
+<navigator url="#">
+	<view class="menuItem">
+		<view class="name">文章收藏</view>
+		<view class="iconfont icon-xiangyou next"></view>
+	</view>
+</navigator>
+
+<view class="space">.</view>
+
+<van-cell title="关于我们" is-link />
+<van-cell
+ title="清除缓存"
+ is-link
+ bind:click="clearStorage"
+/>
+<van-cell title="当前版本" value="1.0.0" />
+

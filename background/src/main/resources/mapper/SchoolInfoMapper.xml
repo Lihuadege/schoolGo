@@ -5,12 +5,25 @@
         <id property="id" column="id"></id>
         <result property="parentId" column="parent_id"></result>
         <result property="name" column="name"></result>
+        <result property="parentName" column="parentName"></result>
     </resultMap>
 
     <select id="getSchoolInfoListByUserAreaId" resultMap="schools">
          SELECT a.id, a.parent_id, a.`name`
          FROM school_info a JOIN (SELECT parent_id AS bid from school_info WHERE id=#{userAreaId}) b
          ON b.bid = a.parent_id
+    </select>
+
+    <select id="getSchoolInfoAndParentName" resultMap="schools">
+        SELECT a.id, a.name, a.parent_id, b.name as parentName
+        FROM school_info a LEFT JOIN school_info b on a.parent_id=b.id
+        WHERE a.id>34
+        <if test="parentName != null">
+            AND b.name like #{parentName}
+        </if>
+        <if test="name != null">
+            AND a.name like #{name}
+        </if>
     </select>
 
 </mapper>

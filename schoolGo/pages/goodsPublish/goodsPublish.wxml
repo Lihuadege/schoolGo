@@ -1,0 +1,35 @@
+<view class="container">
+
+	<!-- <view class="title">商品发布</view> -->
+	<form catchsubmit="goodsSub">
+		<view class="itemContainer">
+			<view class="direction">标题：</view>
+			<input
+			 type="text"
+			 class="title"
+			 placeholder="请输入文章标题"
+			/>
+		</view>
+
+		<view class="itemContainer">
+			<view class="direction">详细描述：</view>
+			<textarea
+			 class="description"
+			 value=""
+			 placeholder="请在此填写文章描述"
+			 placeholder-style=""
+			 placeholder-class="textarea-placeholder"
+			></textarea>
+		</view>
+		<van-uploader
+		 accept="image"
+		 image-fit="widthFix"
+		 use-before-read
+		 bind:before-read="showImages"
+		 file-list="{{ fileList }}"
+		 bind:after-read="afterRead"
+		/>
+	</form>
+
+</view>
+

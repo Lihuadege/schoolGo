@@ -1,0 +1,127 @@
+<view class="container">
+	<view class="topContainer">
+		<!-- 顶部显示商品信息 -->
+		<view class="headImg">
+			<image
+			 class=""
+			 src="http://localhost:8080{{goodsInfo.coverImg}}"
+			 mode="widthFix"
+			/>
+		</view>
+		<view class="right">
+			<view class="title">{{goodsInfo.title}}</view>
+			<view class="price">￥{{price}}</view>
+			<view class="priceOperate">
+				<view class="leftWords">购买数量</view>
+				<view class="rightContainer">
+					<view
+					 class="operateBtnL"
+					 bind:tap="minusNumber"
+					 hover-class="hover"
+					 hover-start-time="0"
+					 hover-stay-time="20"
+					>-
+					</view>
+					<view class="number">{{number}}</view>
+					<view
+					 class="operateBtnR"
+					 bind:tap="plusNumber"
+					 hover-class="hover"
+					 hover-start-time="0"
+					 hover-stay-time="20"
+					>+
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+	<view class="bottom">
+		<!-- 这里是表单区域 -->
+		<form class="weui-cells weui-cells_form" bindsubmit="formSubmit">
+			<view class="weui-cell">
+				<view class="weui-cell_hd">
+					姓名：
+				</view>
+				<view class="weui-cell_bd">
+					<input
+					 class="weui-input"
+					 bindblur="isNullVerify"
+					 data-type="名称"
+					 placeholder="请输入联系名称"
+					 name="purchaserName"
+					/>
+				</view>
+			</view>
+
+			<view class="weui-cell">
+				<view class="weui-cell_hd">
+					电话：
+				</view>
+				<view class="weui-cell_bd">
+					<input
+					 name="phoneNum"
+					 class="weui-input"
+					 type="number"
+					 bindblur="phoneVerify"
+					 placeholder="{{userPhone==''?'请输入手机号':userPhone}}"
+					 value="{{userPhone==''?'':userPhone}}"
+					/>
+				</view>
+			</view>
+			<view class="weui-cell">
+				<view class="weui-cell_hd">
+					交易时间：
+				</view>
+				<picker
+				 class="weui-cell_bd"
+				 mode="time"
+				 value="{{time}}"
+				 bindchange="bindDateChange"
+				 name="tradeTime"
+				>
+					<view class="time">{{time}}</view>
+				</picker>
+			</view>
+			<view class="weui-cell">
+				<view class="weui-cell_hd">
+					交易地点：
+				</view>
+				<view class="weui-cell_bd">
+					<input
+					 class="weui-input"
+					 name="tradeAddr"
+					 bindblur="isNullVerify"
+					 data-type="地址"
+					 placeholder="请输入地址"
+					/>
+				</view>
+			</view>
+			<view class="weui-cell">
+				<view class="weui-ecll_hd">交易方式：</view>
+				<radio-group name="tradeWay">
+					<label class="radio">
+						<radio value="1" checked="true" />
+						上门送货
+					</label>
+					<label class="radio">
+						<radio value="0" />
+						约定交易
+					</label>
+				</radio-group>
+			</view>
+			<view class="weui-cell">
+				<view class="weui-ecll_hd notice">备注</view>
+				<textarea class="beizhu" name="orderNote"></textarea>
+			</view>
+
+			<view class="fixContainer">
+				<view class="titlePrice">总售价:
+					<text class="price">￥ {{totalPrice}}</text>
+				</view>
+				<button class="submitBtn" form-type="submit">提交订单</button>
+			</view>
+		</form>
+	</view>
+
+</view>
+

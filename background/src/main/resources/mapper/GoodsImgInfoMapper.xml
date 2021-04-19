@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.li.schoolGo.mapper.GoodsImgInfoMapper">
+    <!--<resultMap id="goodsImg" type="com.li.schoolGo.bean.GoodsImgInfo" autoMapping="true">
+        <id property="goodsId" column="goods_id"></id>
+        <result property="goodsUrl" column="goods_url"></result>
+    </resultMap>-->
+
+    <insert id="insertImgList" parameterType="com.li.schoolGo.bean.GoodsImgInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into goods_img_info(goods_id,goods_url) values
+        <foreach collection="imgUrl" item="item" separator=",">
+            (#{goodsId}, #{item})
+        </foreach>
+    </insert>
+
+
+</mapper>

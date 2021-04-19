@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html  lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>用户列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" href="../style/admin.css" th:href="@{/style/admin.css}" media="all">
+    <script src="../layui/layui.js" th:src="@{/layui/layui.js}"></script>
+    <script src="../layui/jquery-1.8.3.js" th:src="@{/layui/jquery-1.8.3.js}"></script>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+
+
+            <!--表格头-->
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">学校名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="schoolName" name="schoolName" placeholder="请输入" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">地区名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="parentName" name="parentName" placeholder="请输入" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-admin" data-type="search_table">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                    <button class="layui-btn layuiadmin-btn-admin" data-type="clear">
+                        重置
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn layuiadmin-btn-admin" data-type="batchDel">批量删除</button>
+                <button class="layui-btn layuiadmin-btn-admin" data-type="add">添加</button>
+            </div>
+
+            <table id="myTable" lay-filter="myTable"></table>
+
+            <script type="text/html" id="table_admin">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                        class="layui-icon layui-icon-edit"></i>编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                        class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<!--  <script src="../layui/layui.js"></script>  -->
+<script>
+    layui.config({
+        base: '../'
+    }).use(['jquery', 'layer', 'table'], function () {
+        var $ = layui.$
+            , jquery = layui.jquery
+            , table = layui.table
+            , layer = layui.layer;
+
+        table.render({
+            elem: '#myTable',
+            url: '/listSchool', //数据接口
+            title: '用户列表',
+            height: 472,
+            page: true,
+            limit: 10,
+            limits: [10, 20, 30],
+            cols: [
+                [ //表头
+                    {type: 'checkbox', fixed: 'left'},
+                    {field: 'id', title: '编号', width: 120},
+                    {field: 'name', title: '学校名称', width: 248},
+                    {field: 'parentName', title: '所属地区', width: 223},
+                    {fixed: 'right', title: '操作', width: 240, align: 'center', toolbar: '#table_admin'}
+                ]
+            ],
+            //用于搜索结果重载
+            id: 'tableReload'
+        })
+        //事件
+        var active = {
+            //搜索功能
+            search_table: function () {
+                let parentName = $('#parentName');
+                let name = $('#name');
+
+                table.reload('tableReload', {
+                    method: 'post',
+                    page: {
+                        curr: 1
+                    },
+                    where: {
+                        parentName: parentName.val(),
+                        name: name.val(),
+                    }
+                })
+            },
+
+            clear: function (){
+                $('#parentName').val('');
+                $('#name').val('');
+            },
+
+            //添加用户功能
+            add: function () {
+                layer.open({
+                    type: 2,
+                    title: '添加用户',
+                    content: '/toAddSchool',
+                    area: ['451px', '300px'],
+                });
+            },
+            //批量删除功能
+            batchDel: function () {
+                var checkAll = table.checkStatus('tableReload')
+                    , checkData = checkAll.data; //得到选中的数据
+
+                if (checkData.length === 0) {
+                    return layer.msg('请选择数据');
+                }
+
+                layer.confirm('确定删除吗？', function () {
+                    let checkId = new Array();
+                    for(let i = 0; i < checkData.length; i ++){
+                        checkId[i] = checkData[i].id;
+                    }
+                    $.ajax({
+                        url: '/delSchool',
+                        dataType: 'json',
+                        type: "post",
+                        contentType: 'application/json',
+                        data: JSON.stringify(checkId),
+                        success: function (res) {
+                            if(res.code == 0){
+                                table.reload('tableReload');
+                            }
+                            layer.msg(res.msg);
+                        }
+                    })
+                });
+
+            }
+
+        };
+
+        $('.layui-btn.layuiadmin-btn-admin').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        //编辑功能按理说应该没有，考虑到手快可能输错，还是加了
+        function edit(data) {
+            layer.open({
+                type: 2,
+                title: '修改用户信息',
+                area: ['451px', '300px'],
+                content: '/toAddSchool?id=' + data.id,
+            });
+        }
+
+        function del(data,object,index) {
+            let checkId = new Array();
+            checkId[0] = data.id;
+            $.ajax({
+                url: '/delSchool',
+                dataType: 'json',
+                type: "post",
+                contentType: 'application/json',
+                data: JSON.stringify(checkId),
+                success: function (res) {
+                    if(res.code == 0){
+                        object.del();
+                        layer.close(index);
+                    }
+                    layer.msg(res.msg);
+                }
+            })
+        }
+
+        table.on('tool(myTable)',function (object) {
+            let data = object.data;
+            let event = object.event;
+
+            if(event == 'edit'){
+                edit(data);
+            }else if(event == 'del'){
+                layer.confirm('真的要删除吗',function (index) {
+                    del(data,object,index);
+                })
+            }
+        })
+
+    });
+</script>
+</body>
+</html>

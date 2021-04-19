@@ -1,0 +1,12 @@
+<view class="container">
+    <image class="" src="../../images/2.png"
+     mode="aspectFix" lazy-load="false"/>
+    
+    <text class="notice">{{noticeContent}}</text>
+
+    <view class="noticeTime" decode="true">
+        {{createTime}}
+    </view>
+      
+</view>
+

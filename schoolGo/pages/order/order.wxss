@@ -1,0 +1,117 @@
+.orderItem {
+    width: 98vw;
+    margin: 10rpx;
+    border: 4rpx solid gainsboro;
+    border-radius: 10rpx;
+    height: 450rpx;
+    /* margin: 0 20rpx; */
+}
+
+.topItem {
+    height: 140rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar {
+    margin-left: 20rpx;
+    flex: 1;
+    width: 100rpx;
+    height: 100rpx;
+}
+
+.avatar image {
+    height: 95%;
+    width: 100%;
+    border-radius: 100%;
+}
+
+.name {
+    flex: 4;
+    padding-left: 20rpx;
+}
+
+.status {
+    flex: 2;
+    text-align: right;
+    margin-right: 20rpx;
+}
+
+.centerItem {
+    display: flex;
+    height: 240rpx;
+}
+
+.left {
+    flex: 2.5;
+    margin-left: 20rpx;
+    margin-right: 10rpx;
+    overflow: hidden;
+}
+
+.headImg {
+    width: 100%;
+    height: 100%;
+}
+
+.middle {
+    flex: 2;
+    padding-right: 20rpx;
+}
+
+.right {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    margin-right: 20rpx;
+}
+
+.price {
+    color: tomato;
+    flex: 1;
+}
+
+.number {
+    flex: 2;
+    color: silver;
+}
+
+.totalPrice {
+    flex: 1;
+}
+
+.block {
+    color: red;
+    font-size: 40rpx;
+}
+
+.buttomItem {
+    height: 70rpx;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20rpx;
+}
+
+.operateBtn {
+    background-color: var(--themeColor);
+    color: white;
+    height: 60rpx;
+    line-height: 60rpx;
+    width: 160rpx;
+    text-align: center;
+    border-radius: 10rpx;
+}
+
+.urlNav {
+    color: var(--themeColor);
+}
+
+.noMore {
+    width: 100vw;
+    height: 80rpx;
+    text-align: center;
+    line-height: 80rpx;
+}

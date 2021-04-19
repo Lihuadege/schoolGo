@@ -7,25 +7,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 //普通视图转发的控制器
 public class MainController {
 
-    @RequestMapping({"toIndex","/"})
-    public String home(){
+    @RequestMapping({"toIndex", "/"})
+    public String home() {
         return "index";
     }
 
     @RequestMapping("home")
-    public String toMainPage(){
+    public String toMainPage() {
         return "home";
     }
-
-    @RequestMapping("basicInfo")
-    public String basicInfo(){
-        return "personal/info";
-    }
-
-    @RequestMapping("toUpdatePwd")
-    public String updatePwd(){
-        return "personal/password";
-    }
-
 
 }

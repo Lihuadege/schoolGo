@@ -1,0 +1,40 @@
+<!-- 商品详情页 -->
+<scroll-view scroll-y class="scollArea">
+	<view class="headContainer">
+		<image class="touxiang" src="{{detailGoods.coverImg}}" />
+		<view class="rightContainer">{{detailGoods.userName}}</view>
+	</view>
+
+	<view class="line"></view>
+
+	<view class="price">
+		<span class="fuhao">￥</span>
+		{{detailGoods.goodsInfo.price}}
+	</view>
+
+	<view class="describe">{{detailGoods.goodsInfo.detailDesc}}</view>
+
+	<view class="imageContainer">
+		<image
+		 wx:for="{{detailGoods.goodsInfo.goodsImgInfoList}}"
+		 src="http://localhost:8080{{item.goodsUrl}}"
+		 wx:key="goodsUrl"
+		 mode="widthFix"
+		/>
+	</view>
+</scroll-view>
+
+<!-- 底部固定区域 -->
+<view class="buttomView">
+	<view class="toolItem">
+		<view class="iconfont icon-guanzhu"></view>
+		<view>分享</view>
+	</view>
+	<view class="toolItem" bind:tap="collectGoods">
+		<view class="iconfont {{isCollect?'icon-shoucang myFont':'icon-shoucang1'}}"></view>
+		<view>{{isCollect?'已收藏':'收藏'}}</view>
+	</view>
+	<view class="toolItem blank"></view>
+	<view class="toolItem buy_btn" bind:tap="createOrder">立即购买</view>
+</view>
+

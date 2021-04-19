@@ -2,7 +2,7 @@ package com.li.schoolGo.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.li.schoolGo.bean.SysUser;
-import com.li.schoolGo.Constant.TokenConst;
+import com.li.schoolGo.constant.TokenConst;
 import com.li.schoolGo.service.SysUserService;
 import com.li.schoolGo.util.CookieUtil;
 import com.li.schoolGo.util.IsAllow;
@@ -64,8 +64,9 @@ public class MyInterceptor extends HandlerInterceptorAdapter {
 
         if(!StringUtils.isEmpty(result)){
             SysUser user = (SysUser) JSON.parseObject(result,SysUser.class);
-            request.setAttribute("nickName", user.getLoginName());
+            request.setAttribute("nickName", user.getUserName());
             request.setAttribute("headImg",user.getHeadImg());
+            request.setAttribute("userId",user.getId());
             if(user.getIsSuperManager() == 1){
                 request.setAttribute("isSuperManager",true);
             }

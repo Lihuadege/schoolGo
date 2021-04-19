@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.li.schoolGo.mapper.CollectVoMapper">
+    <resultMap id="collectVo" type="com.li.schoolGo.bean.CollectVo" autoMapping="true">
+        <result column="goods_title" property="goodsTitle"/>
+        <result column="goods_head_img" property="goodsHeadImg"/>
+        <result column="goods_price" property="goodsPrice"/>
+        <association property="collectInfo" javaType="com.li.schoolGo.bean.CollectInfo" autoMapping="true">
+            <id property="id" column="id"/>
+        </association>
+    </resultMap>
+
+    <select id="getCollectList" resultMap="collectVo">
+        SELECT a.id, a.user_id, a.goods_id, a.create_time, b.title as goods_title, b.cover_img as goods_head_img, b.price as goods_price
+        FROM collect_info a LEFT JOIN goods_info b ON a.goods_id = b.id
+        WHERE a.`status`=1 and a.user_id=#{userId}
+    </select>
+
+</mapper>

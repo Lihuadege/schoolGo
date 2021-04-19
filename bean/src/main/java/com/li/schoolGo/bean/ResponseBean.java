@@ -11,7 +11,7 @@ public class ResponseBean {
     private Integer code;
     private String msg;
     private Object data;
-    
+
     public static ResponseBean baseSuccess(){
         return new ResponseBean(ResponseBeanEnum.SUCCESS.code,ResponseBeanEnum.SUCCESS.msg,null);
     }
@@ -42,6 +42,14 @@ public class ResponseBean {
 
     public static ResponseBean baseError(String msg, Object data){
         return new ResponseBean(ResponseBeanEnum.ERROR.code,msg,data);
+    }
+
+    public static ResponseBean baseTransfer(){
+        return new ResponseBean(ResponseBeanEnum.TRANSFER_ERROR.code,ResponseBeanEnum.TRANSFER_ERROR.msg,null);
+    }
+
+    public static ResponseBean base(int code, String msg, Object data){
+        return new ResponseBean(code, msg, data);
     }
     
 }

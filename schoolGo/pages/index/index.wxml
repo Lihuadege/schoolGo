@@ -1,0 +1,68 @@
+<view class="container">
+  
+  <!-- 顶部的轮播图 -->
+  <view class="swiperContainer">
+    <swiper class="topSwiper"  indicator-dots="true" 
+    indicator-active-color="#fff" autoplay circular interval="2000" duration="500">
+      <swiper-item  wx:key="id" wx:for="{{bannerList}}">
+        <image mode="aspectFill" bindtap="tapBanner" src="{{item.requestUrl}}" />
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <view class="gap"></view>
+
+  <!-- 中间的导航栏 -->
+  <view class="navContainer">
+    <view class="navItem">
+      <image src="/images/icon/paotui.png" />
+      <text>跑腿服务</text>
+    </view>
+    <view class="navItem">
+      <image class="smaller" src="/images/icon/jingxuan.png" />
+      <text>精选商家</text>
+    </view>
+    <view class="navItem">
+      <image src="/images/icon/lianxi.png" />
+      <text>联系我们</text>
+    </view>
+    <view class="navItem">
+      <image src="/images/icon/ruzhu.png" />
+      <text>商家入驻</text>
+    </view>
+  </view>
+
+  <!-- 公告墙 -->
+  <view class="noticeContainer">
+    <text>公告墙：</text>
+    <swiper class="noticeSwiper" autoplay circular interval="2000" duration="500" vertical>
+      <swiper-item wx:for="{{noticeList}}" wx:key="id">
+          <navigator url="/pages/noticeDetail/noticeDetail?id={{item.id}}">
+          {{item.noticeContent}}
+          </navigator>
+      </swiper-item>  
+    </swiper>
+  </view>
+
+  <view class="gap"></view>
+
+  <view class="weui-loadmore weui-loadmore_line">
+    <view class="weui-loadmore__tips weui-loadmore__tips_in-line">商品列表</view>
+  </view>
+
+  <!-- 商品推荐展示 -->
+  <view class="productContainer">
+    <navigator wx:for="{{goodsList}}"
+      wx:key="id" url="/pages/detail/detail?goods_id={{item.id}}">
+      <view class="productItem">
+        <view class="productImage"><image mode="aspectFill" src="http://localhost:8080{{item.coverImg}}"/></view>
+        <view class="productTitle"><text class="title">{{item.title}}</text></view>
+        <view class="productPrice"><text>￥{{item.price}}</text></view>
+        <text wx:if="{{item.isPersonal === 0}}" class="iconfont icon-shangjia isShangjia"></text>
+      </view>
+    </navigator>
+    
+  </view>
+
+
+</view>

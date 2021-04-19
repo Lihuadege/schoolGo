@@ -1,0 +1,136 @@
+/* pages/index/index.wxss */
+.swiperContainer{
+  align-items: center;
+}
+
+.topSwiper{
+  width: 750rpx;
+  height: 350rpx; 
+}
+
+.topSwiper image {
+  width: 750rpx;
+  height: 350rpx;
+}
+
+.navContainer{
+  display: flex;
+}
+
+.navItem{
+  display: flex;
+  flex-direction: column;
+  width: 25%;
+  align-items: center;
+}
+
+.navItem image{
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 10%;
+  line-height: 100rpx;
+  margin: 20rpx 0 0 0;
+}
+
+.smaller{
+  width: 70rpx;
+  height: 70rpx;
+  /* margin: 10rpx; */
+}
+
+.navItem text{
+  font-size: 34rpx;
+  line-height: 80rpx;
+}
+
+.noticeContainer{
+  margin: 20rpx 10rpx;
+  display: flex;
+  line-height: 80rpx;
+  font-size: 30rpx;
+  height: 80rpx;
+  /* border: 1rpx solid rgb(243, 52, 233); */
+  border-radius: 30rpx;
+  background-color: #F2f2f2
+}
+
+.noticeContainer text{
+  display: inline-block;
+  width: 140rpx;
+  text-align: right;
+}
+
+.noticeSwiper{
+  width: 570rpx;
+  height: 80rpx;
+}
+
+.noticeSwiper swiper-item{
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gap{
+  background-color:  #F2f2f2;
+  height: 20rpx;
+}
+
+.productContainer{
+  display: flex;
+  justify-content: space-between;  
+  flex-wrap:wrap;
+  box-sizing: content-box;
+  padding: 24rpx;
+  background-color: #F2f2f2;
+}
+
+.productItem{
+  width: 339rpx;
+  height: 472rpx;
+  background-color: #fff;
+  overflow: hidden;
+  margin-bottom: 24rpx;
+  border-radius:5px;
+  position: relative;
+}
+
+.productImage{
+  width: 339rpx;
+  height: 339rpx;
+  overflow: hidden;
+}
+
+.productImage image{
+  width: 339rpx;
+  height: 339rpx;
+}
+
+.productItem .productTitle{
+  width: 280rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 30rpx;
+  padding: 24rpx 0 0rpx 0;
+  color:#000;
+  margin-left: 24rpx;
+}
+
+.productItem .productPrice{
+  width: 280rpx;
+  overflow: hidden;
+  font-size: 30rpx;
+  color:#e64340;
+  margin-left: 24rpx;
+}
+
+.isShangjia{
+  color: #24bef0;
+  position: absolute;
+  top: 395rpx;
+  left: 280rpx;
+  z-index: 100;
+  font-size: 50rpx;
+}

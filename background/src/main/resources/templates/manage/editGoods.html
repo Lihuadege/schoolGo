@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>用户信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all">
+    <script src="../layui/layui.js" th:src="@{/layui/layui.js}"></script>
+    <style type="text/css">
+
+        #formData {
+            max-width: 852px;
+            margin: 0 auto
+        }
+
+        .img-item {
+            position: relative;
+            cursor: default;
+        }
+
+        #innerItem{
+            position: relative;
+            cursor: default;
+        }
+
+        .img-item .delete {
+            position: absolute;
+            display: block;
+            width: 20px;
+            height: 20px;
+            color: #fff;
+            background: rgba(232, 0, 0, 0.7);
+            line-height: 20px;
+            text-align: center;
+            border-radius: 50%;
+            top: 25px;
+            right: 25px;
+            cursor: pointer;
+        }
+
+        .img {
+            margin-bottom: 5px;
+            width: 100%;
+            height: auto
+        }
+
+        .self-btn {
+            display: inline-block;
+            line-height: 38px;
+            padding: 0 18px;
+            height: 38px;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<form class="layui-form" lay-filter="layuiadmin-form-useradmin" id="formData"
+      style="padding: 20px 0 0 0;">
+
+    <input type="hidden" name="id" id="goodsId" th:value="${goodsInfo == null}? '0' :${goodsInfo.id}"/>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品名称:</label>
+        <div class="layui-input-inline">
+            <input type="text" name="title" lay-verify="required" placeholder="请输入商品名" autocomplete="off"
+                   class="layui-input" th:value="${goodsInfo == null}?'':${goodsInfo.title}">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <div class="layui-form-label" th:text="${goodsInfo == null}? '商品描述:':'商品信息:'">商品描述</div>
+        <div class="layui-input-block">
+            <textarea name="detailDesc" id="detailDesc" th:text="${goodsInfo == null}? '':${goodsInfo.detailDesc}"
+                      class="layui-textarea" rows="10px" style="width: 540px"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">价格:</label>
+        <div class="layui-input-inline">
+            <input type="text" name="price" lay-verify="required" placeholder="请输入价格" autocomplete="off"
+                   class="layui-input" th:value="${goodsInfo == null}?'':${goodsInfo.price}">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品类别:</label>
+        <div class="layui-input-block">
+            <div class="layui-inline">
+                <select name="categoryId" lay-verify="required">
+                    <option value="0">请选择</option>
+                    <option th:each="category : ${session.categoryInfo}" th:value="${category.id}"
+                            th:text="${category.name}"
+                            th:selected="${goodsInfo != null and category.id == goodsInfo.categoryId}"></option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品状态:</label>
+        <div class="layui-input-block">
+            <div class="layui-inline">
+                <select name="status" id="status" lay-verify="required" lay-filter="changeStatus">
+                    <option value="">请选择状态</option>
+                    <option value="2" th:selected="${goodsInfo != null and goodsInfo.status==2}? true:false">上架</option>
+                    <option value="1" th:selected="${goodsInfo != null and goodsInfo.status==1}? true:false">暂不上架
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-card-body" style="margin-bottom: 40px">
+        <div class="layui-card-body">
+            <blockquote class="layui-elem-quote" id="gallery">
+                <div class="img-item" th:if="${goodsInfo != null}">
+                    <!--这个标签内，只有修改商品是才会有，那么，点击触发删除该图片是否连在服务器存储的图片也删除掉？-->
+                    <div id="innerItem" th:each="image : ${goodsInfo.goodsImgInfoList}">
+                        <span class="delete deleteImg" th:id="${image.goodsUrl}">x</span>
+                        <img class="img" th:src="${image.goodsUrl}">
+                    </div>
+                </div>
+
+                <div class="img-item" style="display: inline-block;">
+                    <label for="btn-upload" class="layui-btn-warm self-btn" id="btn-upload">上传并预览图片</label>
+                </div>
+            </blockquote>
+            <input id="file" type="file" multiple style="display: none">
+        </div>
+    </div>
+
+    <!--    <input type="hidden" name="isImgEdit" id="isImgEdit" value="0">-->
+    <div class="layui-form-item"
+         style="position: fixed; bottom: -25px; width: 100%; background-color: white; height: 60px; padding-top: 15px">
+        <div class="layui-input-block">
+            <button th:text="${goodsInfo != null}?'立即修改':'立即添加'" class="layui-btn" lay-submit
+                    lay-filter="addGoods">
+                立即添加
+            </button>
+            <button th:if="${goodsInfo == null}" type="reset" id="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<!--<div class="layui-card-body" style="margin-bottom: 40px">
+    <div class="layui-card-body">
+        <form class="layui-upload" enctype="multipart/form-data">
+            <input type="file" multiple class="layui-btn" id="test-upload-more">商品图片上传</input>
+            <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                预览(图片不能编辑或删除，只能覆盖即可)：
+                <div class="layui-upload-list" id="test-upload-more-list">
+                    <div style="margin: 0; padding: 0; border: 0" th:if="${goodsInfo != null}">
+                        <img th:each="image : ${goodsInfo.goodsImgInfoList}"
+                             th:src="${image.goodsUrl}" src="/images/example/20210217192100.png"
+                             class="layui-upload-img img-class">
+                    </div>
+                </div>
+            </blockquote>
+        </form>
+    </div>
+</div>-->
+
+<script>
+    layui.use(['form', 'jquery', 'upload', 'layer'], function () {
+        let $ = layui.jquery
+            , form = layui.form
+            , layer = layui.layer;
+
+        //此处只能用class选择器，因为只有从后台回显的图片才会有这个属性，直接添加的没有，因此当添加图片时是不会有影响的
+        $(".deleteImg").click(function () {
+            let goodsId = $('#goodsId').val();
+            let goodsUrl = $(this).attr('id');
+            $(this).parent().remove();
+            $.post(
+                "delImg", {goodsUrl: goodsUrl, goodsId: goodsId}, function (res) {
+                    layer.msg(res.msg, 500);
+                }
+            )
+        })
+
+
+        // 选择图片按钮隐藏input[file]
+        $("#btn-upload").click(function () {
+            //指定元素事件类型
+            $("#file").trigger("click");
+        });
+        // 创建数组保存图片
+        let files = new Array();
+        let id = 0;
+
+        // 选择图片
+        //此方法有一个bug, 当上传一个图片之后，删除，再次上传该图片，就会失败，应该是浏览器缓存的原因
+        $("#file").change(function () {
+            // 获取所有图片
+            let img = document.getElementById("file").files;
+            // 遍历
+            for (let i = 0; i < img.length; i++) {
+                // 得到图片
+                let file = img[i];
+
+                // 判断是否是图片
+                let flag = judgeImgSuffix(file.name);
+                if (!flag) {
+                    alert("要求图片格式为png,jpg,jpeg,bmp");
+                    return;
+                }
+
+                // 把图片存到数组中
+                files[id] = file;
+                id++;
+                // 获取图片路径
+                let url = URL.createObjectURL(file);
+
+                // 创建并填充img标签
+                let box = document.createElement("img");
+                box.setAttribute("src", url);
+                box.className = 'img';
+
+                // 创建img标签的父盒子div
+                let imgBox = document.createElement("div");
+                imgBox.className = 'img-item';
+
+                // 创建span，删除图片功能
+                let deleteIcon = document.createElement("span");
+                deleteIcon.className = 'delete';
+                deleteIcon.innerText = 'x';
+                // 把图片名绑定到data里面
+                deleteIcon.id = img[i].name;
+                // 把img和span加入到div中
+                imgBox.appendChild(deleteIcon);
+                imgBox.appendChild(box);
+                // 获取id=gallery的标签
+                let body = document.getElementsByClassName("layui-elem-quote")[0];
+                // body.appendChild(imgBox);
+                let showPlace = document.getElementsByClassName("img-item")[0];
+                body.insertBefore(imgBox, showPlace);
+                // 点击span事件
+                $(deleteIcon).click(function () {
+                    // 获取data中的图片名
+                    let filename = $(this).attr('id');
+                    // 删除父节点
+                    $(this).parent().remove();
+                    let fileList = Array.from(files);
+                    // 遍历数组
+                    for (let j = 0; j < fileList.length; j++) {
+                        // 通过图片名判断图片在数组中的位置然后删除
+                        if (fileList[j].name == filename) {
+                            fileList.splice(j, 1);
+                            id--;
+                            break;
+                        }
+                    }
+                    files = fileList;
+                });
+            }
+        });
+
+        //监听提交
+        form.on('submit(addGoods)', function (data) {
+            // 创建FormData根据form
+            let uploadData = new FormData($("#formData")[0]);
+            // 遍历图片数组把图片添加到FormData中
+            let maxsize = 0;
+            for (let i = 0; i < files.length; i++) {
+                uploadData.append("file", files[i]);
+                maxsize = maxsize + files[i].size;
+            }
+
+            $.ajax({
+                type: 'post',
+                url: '/doAddGoods', // ajax请求路径
+                data: uploadData,
+                async: false,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    // if (res == 0) {
+                    //     layer.alert(res.msg, function () {
+                    //         window.parent.location.reload();
+                    //         parent.layer.close(index);
+                    //     })
+                    // }
+                    layer.msg(res.msg);
+                },
+            });
+            return false;//禁止跳转，否则会提交两次，且页面会刷新
+        });
+
+        // 判断是否是图片类型
+        function judgeImgSuffix(path) {
+            let index = path.lastIndexOf('.');
+            let suffix = "";
+            if (index > 0) {
+                suffix = path.substring(index + 1);
+            }
+            if ("png" == suffix || "jpg" == suffix || "jpeg" == suffix || "bmp" == suffix || "PNG" == suffix || "JPG" == suffix || "JPEG" == suffix || "BMP" == suffix) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        $("#reset").click(function () {
+            $("input").val("");
+            $('#detailDesc').val("");
+        });
+
+    })
+</script>
+</body>
+</html>

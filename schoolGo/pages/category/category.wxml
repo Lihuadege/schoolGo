@@ -1,0 +1,20 @@
+<view class="container">
+  <scroll-view class="categoryContainer" scroll-y scroll-with-animation="true">
+    <van-sidebar active-key="{{acticeId}}">
+      <van-sidebar-item  wx:for="{{category}}" wx:key="id"
+       bindtap="changeCategory" data-aid="{{item.id}}" 
+       title="{{item.name}}" id="{{item.id}}"/>
+    </van-sidebar>
+  </scroll-view>
+  <scroll-view scroll-y class="productContainer" scroll-with-animation bindscrolltolower="getNewGoods">
+    <van-empty wx:if="{{total==0}}" description="暂无该类型商品"/>
+    <navigator wx:for="{{goodsList}}" wx:key="id"
+    url="/pages/detail/detail?goods_id={{item.id}}">  
+      <van-card 
+      price="{{item.price}}" title="{{item.title}}" 
+      desc="{{item.detailDesc}}"
+      thumb="http://localhost:8080{{item.coverImg}}"/>
+    </navigator>
+  </scroll-view >
+
+</view>

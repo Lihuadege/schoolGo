@@ -1,0 +1,78 @@
+{
+  "setting": {},
+  "condition": {
+    "plugin": {
+      "list": []
+    },
+    "game": {
+      "list": []
+    },
+    "gamePlugin": {
+      "list": []
+    },
+    "miniprogram": {
+      "list": [
+        {
+          "name": "分类",
+          "pathName": "pages/category/category",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "广场",
+          "pathName": "pages/square/square",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "个人中心",
+          "pathName": "pages/personal/personal",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "详情页",
+          "pathName": "pages/detail/detail",
+          "query": "goods_id=5",
+          "scene": null
+        },
+        {
+          "name": "测试功能",
+          "pathName": "pages/test/test",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "订单页面",
+          "pathName": "pages/order/order",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "选择",
+          "pathName": "pages/choose/choose",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "提交订单",
+          "pathName": "pages/orderSubmit/orderSubmit",
+          "query": "goodsId=14",
+          "scene": null
+        },
+        {
+          "name": "商品发布",
+          "pathName": "pages/goodsPublish/goodsPublish",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "收藏表",
+          "pathName": "pages/goodsCollect/goodsCollect",
+          "query": "",
+          "scene": null
+        }
+      ]
+    }
+  }
+}
