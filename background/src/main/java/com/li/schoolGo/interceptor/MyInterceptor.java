@@ -67,6 +67,7 @@ public class MyInterceptor extends HandlerInterceptorAdapter {
             request.setAttribute("nickName", user.getUserName());
             request.setAttribute("headImg",user.getHeadImg());
             request.setAttribute("userId",user.getId());
+            request.setAttribute("areaId",String.valueOf(user.getUserAreaId()));
             if(user.getIsSuperManager() == 1){
                 request.setAttribute("isSuperManager",true);
             }

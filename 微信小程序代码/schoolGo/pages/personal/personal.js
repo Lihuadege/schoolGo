@@ -52,6 +52,7 @@ Page({
         //用户清除缓存，就是清掉了用户信息，其余信息(登录标志，token)不清除
         wx.setStorageSync("isLogin", false);
         wx.removeStorageSync("userInfo");
+        wx.removeStorageSync("schoolId");
         this.setData({ userInfo: {}, isLogin: false })
         wx.showToast({
             title: '已清除',

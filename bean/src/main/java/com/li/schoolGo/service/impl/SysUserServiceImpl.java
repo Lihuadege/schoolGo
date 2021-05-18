@@ -125,18 +125,20 @@ public class SysUserServiceImpl implements SysUserService {
     public Map<String, Object> getAll(Integer pageNum, Integer pageSize, String loginName, String phoneNum, String email) {
 
         Example example = new Example(SysUser.class);
+        Example.Criteria criteria = example.createCriteria();
 
         if (!StringUtils.isEmpty(loginName)) {
-            example.createCriteria().andLike("loginName", "%" + loginName + "%");
+            criteria.andLike("userName", "%" + loginName + "%");
         }
         if (!StringUtils.isEmpty(phoneNum)) {
-            example.createCriteria().andLike("phoneNum", "%" + phoneNum + "%");
+            criteria.andLike("phoneNum", "%" + phoneNum + "%");
         }
         if (!StringUtils.isEmpty(email)) {
-            example.createCriteria().andLike("email", "%" + email + "%");
+            criteria.andLike("email", "%" + email + "%");
         }
 
-        example.createCriteria().andEqualTo("status", 1);
+        criteria.andEqualTo("status", 1);
+        criteria.andEqualTo("isSuperManager","0");
 
         PageHelper.startPage(pageNum, pageSize);
         List<SysUser> sysUsers = sysUserMapper.selectByExample(example);

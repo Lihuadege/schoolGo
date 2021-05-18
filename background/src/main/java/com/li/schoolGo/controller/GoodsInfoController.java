@@ -68,7 +68,9 @@ public class GoodsInfoController {
     public ResponseBean doAddGoods(MultipartFile[] file, GoodsInfo goodsInfo, HttpServletRequest request) {
 
         String sysUserId = (String) request.getAttribute("userId");
+        String schoolId = (String) request.getAttribute("areaId");
         goodsInfo.setSysUserId(sysUserId);
+        goodsInfo.setSchoolId(schoolId);
         //上传逻辑：既然不是伪多图片上传，可以一次性传入所有图片，可以考虑如下逻辑
         //1、建一个关于该商品的单独的文件夹
         //2、将所有file图片保存到该文件夹下，并添加到一个ArrayList中

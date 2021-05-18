@@ -23,9 +23,9 @@ public interface GoodsInfoService {
 
     Map<String, Object> insertGoodsInfo(GoodsInfo goodsInfo);
 
-    Map<String, Object> getGoodsInfo(Integer page);
+    Map<String, Object> getGoodsInfo(Integer page, String schoolId);
 
-    Map<String, Object> getGoodsInfoByCategoryId(Integer page, String categoryId);
+    Map<String, Object> getGoodsInfoByCategoryId(Integer page, String categoryId, String schoolId);
 
     DetailGoods getGoodsInfoByGoodsId(String goodsId);
 }

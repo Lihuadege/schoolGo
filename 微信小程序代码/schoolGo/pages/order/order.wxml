@@ -41,6 +41,7 @@
 				 wx:if="{{item.status==0}}"
 				 bind:tap="cancelOrder"
 				 class="operateBtn"
+				 data-id="{{item.id}}"
 				>取消订单
 				</view>
 				<view

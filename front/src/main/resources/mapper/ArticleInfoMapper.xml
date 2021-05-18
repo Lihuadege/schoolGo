@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.li.schoolGo.mapper.ArticleInfoMapper">
+    <resultMap id="article" type="com.li.schoolGo.bean.ArticleInfo" autoMapping="true">
+        <id property="id" column="id"></id>
+        <collection property="articleImgInfoList" ofType="com.li.schoolGo.bean.ArticleImgInfo" autoMapping="true">
+        </collection>
+    </resultMap>
+
+    <select id="getArticleList" resultMap="article">
+         SELECT
+            a.id,
+            a.user_id,
+            a.user_nick_name,
+            c.avatar_url AS user_head_img,
+            a.title,
+            a.main_body,
+            a.commend,
+            a.create_time,
+            a.status,
+            b.article_id,
+            b.url
+        FROM
+            article_info a
+        LEFT JOIN article_img b ON a.id = b.article_id
+        LEFT JOIN user_info c ON a.user_id = c.id
+        WHERE
+            c.school_id = #{schoolId}
+    </select>
+
+</mapper>

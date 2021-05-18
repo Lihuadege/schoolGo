@@ -1,0 +1,29 @@
+<view hidden="{{!isShow}}">
+	<view class="title">正式使用之前</view>
+	<view class="title second">请先选择你的学校</view>
+
+	<view class="container">
+		<picker
+		 class="left public"
+		 bindchange="changeProvince"
+		 range="{{provinceArray}}"
+		>
+			<view class="province" value="0">{{selectedParent}}</view>
+		</picker>
+
+		<picker
+		 class="right public"
+		 bindchange="changeSchool"
+		 range="{{schoolArray}}"
+		 range-key="name"
+		 disabled="{{isDisabled}}"
+		>
+			<view class="school">{{selectedSchool}}</view>
+		</picker>
+	</view>
+
+	<button class="submitBtn" bind:tap="submitSchool">
+		进入程序
+	</button>
+</view>
+

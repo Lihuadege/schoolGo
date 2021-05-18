@@ -11,7 +11,6 @@ import com.li.schoolGo.mapper.GoodsInfoMapper;
 import com.li.schoolGo.mapper.SysUserMapper;
 import com.li.schoolGo.mapper.UserInfoMapper;
 import com.li.schoolGo.service.GoodsInfoService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -43,6 +42,7 @@ public class GoodsInfoServiceImpl implements GoodsInfoService {
 
     /**
      * 根据商品id查询商品信息，包括商品的图片
+     *
      * @param goodsId 商品id
      * @return
      */
@@ -58,12 +58,12 @@ public class GoodsInfoServiceImpl implements GoodsInfoService {
             UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userId);
             detailGoods.setUserName(userInfo.getNickName());
             detailGoods.setCoverImg(userInfo.getAvatarUrl());
-        }else if(goodsInfo.getUserId() == null){
+        } else if (goodsInfo.getUserId() == null) {
             String sysUserId = goodsInfo.getSysUserId();
             SysUser sysUser = sysUserMapper.selectByPrimaryKey(sysUserId);
             detailGoods.setUserName(sysUser.getUserName());
             detailGoods.setCoverImg("http://localhost:8080" + sysUser.getHeadImg());
-        }else {
+        } else {
             return null;
         }
 
@@ -71,21 +71,23 @@ public class GoodsInfoServiceImpl implements GoodsInfoService {
     }
 
     @Override
-    public Map<String, Object> getGoodsInfoByCategoryId(Integer page, String categoryId) {
+    public Map<String, Object> getGoodsInfoByCategoryId(Integer page, String categoryId, String schoolId) {
         //因为写到配置文件需要2个项目都写，因此直接在这里定义，避免麻烦，不过不利于扩展和更改配置
         Integer pageSize = 6;
 
         Example example = new Example(GoodsInfo.class);
-        example.createCriteria().andEqualTo("status",2).andEqualTo("categoryId",categoryId);
+        example.createCriteria().andEqualTo("status", 2)
+                .andEqualTo("categoryId", categoryId)
+        .andEqualTo("schoolId",schoolId);
         example.setOrderByClause("create_time desc");
         PageHelper.startPage(page, pageSize);
         List<GoodsInfo> goodsInfoList = goodsInfoMapper.selectByExample(example);
         PageInfo<GoodsInfo> pageInfo = new PageInfo<>(goodsInfoList);
         HashMap<String, Object> retMap = new HashMap<>();
-        retMap.put("code",0);
-        retMap.put("msg","获取成功");
-        retMap.put("data",goodsInfoList);
-        retMap.put("total",pageInfo.getTotal());
+        retMap.put("code", 0);
+        retMap.put("msg", "获取成功");
+        retMap.put("data", goodsInfoList);
+        retMap.put("total", pageInfo.getTotal());
         return retMap;
     }
 
@@ -98,24 +100,26 @@ public class GoodsInfoServiceImpl implements GoodsInfoService {
         int res = goodsInfoMapper.insertSelective(goodsInfo);
         String newId = goodsInfo.getId();
         Map<String, Object> resMap = new HashMap<>();
-        resMap.put("res",res);
-        resMap.put("newId",newId);
+        resMap.put("res", res);
+        resMap.put("newId", newId);
         return resMap;
     }
 
     @Override
-    public Map<String, Object> getGoodsInfo(Integer page) {
-        PageHelper.startPage(page,pageSize);
+    public Map<String, Object> getGoodsInfo(Integer page, String schoolId) {
+        PageHelper.startPage(page, pageSize);
         Example example = new Example(GoodsInfo.class);
         example.setOrderByClause("create_time desc");
-        example.createCriteria().andEqualTo("status","2");
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("status", "2");
+        criteria.andEqualTo("schoolId",schoolId);
         List<GoodsInfo> goodsInfoList = goodsInfoMapper.selectByExample(example);
         PageInfo<GoodsInfo> pageInfo = new PageInfo<>(goodsInfoList);
         HashMap<String, Object> retMap = new HashMap<>();
-        retMap.put("code",0);
-        retMap.put("msg","获取成功");
-        retMap.put("data",goodsInfoList);
-        retMap.put("total",pageInfo.getTotal());
+        retMap.put("code", 0);
+        retMap.put("msg", "获取成功");
+        retMap.put("data", goodsInfoList);
+        retMap.put("total", pageInfo.getTotal());
         return retMap;
     }
 
@@ -189,10 +193,10 @@ public class GoodsInfoServiceImpl implements GoodsInfoService {
     @Override
     public List<GoodsInfo> getGoodsInfoByCriteria(String userId, Integer pageNum, Integer pageSize, String title, String detailDesc, String categoryId, String status) {
         SysUser sysUser = sysUserMapper.selectByPrimaryKey(userId);
-        if(sysUser.getIsSuperManager().equals("1")){
+        PageHelper.startPage(pageNum, pageSize);
+        if (sysUser.getIsSuperManager() == 1) {
             return goodsInfoMapper.selectAll();
         } else {
-            PageHelper.startPage(pageNum, pageSize);
             if (detailDesc != null && !detailDesc.isEmpty()) {
                 detailDesc = '%' + detailDesc + '%';
             }
@@ -202,6 +206,7 @@ public class GoodsInfoServiceImpl implements GoodsInfoService {
             return goodsInfoMapper.getAllByCriteria(userId, title, detailDesc, categoryId, status);
         }
         //以下代码皆作废，使用通用Mapper的example判断条件，有的条件能走到，但是查询时加不上，也不知道是不是bug，还是用xml映射的好些
+        //现在知道为什么不能用了，原因是没有使用同一个criteria
 //        Example example = new Example(GoodsInfo.class);
 //
 //        if (title != null && !title.isEmpty()) {

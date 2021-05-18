@@ -71,21 +71,14 @@
 
 .imageContainer {
     width: 720rpx;
-    /* display: flex;
-  flex-direction: row;
-  flex-wrap: wrap; */
-    /* column-count: 3;
-  column-gap: 20rpx; */
-    display: flex;
+    display: block;
     flex-wrap: wrap;
-    /* column-width: 20rpx; */
-    /* margin-bottom: -20rpx; */
-    /* background-color: pink; */
+    flex-direction: row;
 }
 
 .imageContainer image {
     width: 220rpx;
     height: 220rpx;
-    margin-right: 20rpx;
+    margin-right: 18rpx;
     margin-top: 20rpx;
 }

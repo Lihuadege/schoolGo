@@ -23,6 +23,13 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     ArticleInfoMapper articleInfoMapper;
 
     @Override
+    public List<ArticleInfo> getArticleList(Integer page, String schoolId) {
+        PageHelper.startPage(page,10);
+        List<ArticleInfo> articleList = articleInfoMapper.getArticleList(schoolId);
+        return articleList;
+    }
+
+    @Override
     public ArticleInfo getArticleById(String id) {
         ArticleInfo articleInfo = articleInfoMapper.getArticleById(id);
         return articleInfo;

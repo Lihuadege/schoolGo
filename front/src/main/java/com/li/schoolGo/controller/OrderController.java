@@ -1,12 +1,13 @@
 package com.li.schoolGo.controller;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
-import com.li.schoolGo.bean.*;
+import com.li.schoolGo.bean.OrderInfo;
+import com.li.schoolGo.bean.ResponseBean;
+import com.li.schoolGo.bean.SysUser;
+import com.li.schoolGo.bean.UserInfo;
 import com.li.schoolGo.service.OrderInfoService;
 import com.li.schoolGo.service.SysUserService;
 import com.li.schoolGo.service.UserInfoService;
-import org.apache.poi.util.Removal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,10 +30,10 @@ public class OrderController {
     SysUserService sysUserService;
 
     @RequestMapping("userDeleteOrder")
-    public ResponseBean userDeleteOrder(String orderId){
-        if(orderId != null){
+    public ResponseBean userDeleteOrder(String orderId) {
+        if (orderId != null) {
             Boolean res = orderInfoService.userDeleteOrder(orderId);
-            if(res){
+            if (res) {
                 return ResponseBean.baseSuccess("删除成功");
             }
             return ResponseBean.baseError("删除失败");
@@ -41,10 +42,10 @@ public class OrderController {
     }
 
     @RequestMapping("confirmReceive")
-    public ResponseBean confirmReceive(String orderId){
-        if(orderId != null){
+    public ResponseBean confirmReceive(String orderId) {
+        if (orderId != null) {
             Boolean res = orderInfoService.confirmReceive(orderId);
-            if(res){
+            if (res) {
                 return ResponseBean.baseSuccess("收货成功");
             }
             return ResponseBean.baseError("收货失败");
@@ -53,10 +54,10 @@ public class OrderController {
     }
 
     @RequestMapping("cancelOrder")
-    public ResponseBean cancelOrder(String orderId){
-        if(orderId != null){
+    public ResponseBean cancelOrder(String orderId) {
+        if (orderId != null) {
             Boolean res = orderInfoService.cancelOrder(orderId);
-            if(res){
+            if (res) {
                 return ResponseBean.baseSuccess("取消订单成功");
             }
             return ResponseBean.baseError("取消订单失败");
@@ -72,29 +73,29 @@ public class OrderController {
 
         PageInfo<OrderInfo> pageInfo = new PageInfo<>(userOrderInfoList);
         HashMap<String, Object> retMap = new HashMap<>();
-        retMap.put("code",0);
-        retMap.put("msg","获取成功");
-        retMap.put("total",pageInfo.getTotal());
-        retMap.put("data",userOrderInfoList);
+        retMap.put("code", 0);
+        retMap.put("msg", "获取成功");
+        retMap.put("total", pageInfo.getTotal());
+        retMap.put("data", userOrderInfoList);
         return retMap;
     }
 
     //获取卖方的头像和名称
     @RequestMapping("getSalerInfo")
-    public ResponseBean getSalerInfo(String userId,String sysUserId){
+    public ResponseBean getSalerInfo(String userId, String sysUserId) {
         HashMap<String, Object> retMap = new HashMap<>();
-        if(userId == null){
+        if (userId == null) {
             //获取的是商家信息
             SysUser sysUser = sysUserService.getSysUserById(sysUserId);
-            retMap.put("salerName",sysUser.getUserName());
-            retMap.put("salerHeadImg","http://localhost:8080" + sysUser.getHeadImg());
-        }else{
+            retMap.put("salerName", sysUser.getUserName());
+            retMap.put("salerHeadImg", "http://localhost:8080" + sysUser.getHeadImg());
+        } else {
             //获取个人信息
             UserInfo userInfo = userInfoService.getUserInfoById(userId);
-            retMap.put("salerName",userInfo.getNickName());
-            retMap.put("salerHeadImg",userInfo.getAvatarUrl());
+            retMap.put("salerName", userInfo.getNickName());
+            retMap.put("salerHeadImg", userInfo.getAvatarUrl());
         }
-        return ResponseBean.baseSuccess("获取成功",retMap);
+        return ResponseBean.baseSuccess("获取成功", retMap);
     }
 
     @RequestMapping("payAndCreateOrder")

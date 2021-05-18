@@ -17,19 +17,20 @@ Page({
     /**
      * 生命周期函数--监听页面加载
      */
-    onLoad: function(options) {
+    onLoad: async function(options) {
         var isLogin = wx.getStorageSync("isLogin");
         this.setData({ isLogin })
 
         if (isLogin) {
             let userInfo = wx.getStorageSync("userInfo");
-            this.setData({ userId: userInfo.id })
+            this.setData({ userId: userInfo.id });
         }
 
         // console.log(options)
         let goodsId = options.goods_id;
         requests("/getGoodsById", { goodsId }).then(result => {
             let detailGoods = result.data;
+            this.verifyCollect(detailGoods.goodsInfo.id)
             this.setData({
                 detailGoods,
                 goodsId: detailGoods.goodsInfo.id

@@ -9,7 +9,7 @@
 	 class="goodsItem"
 	 wx:for="{{goodsList}}"
 	 wx:key="id"
-	 url="/pages/detail/detail?goods_id={{item.collectInfo.id}}"
+	 url="/pages/detail/detail?goods_id={{item.collectInfo.goodsId}}"
 	>
 		<view class="imgContainer">
 			<image

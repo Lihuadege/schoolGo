@@ -2,6 +2,7 @@ package com.li.schoolGo.service;
 
 import com.li.schoolGo.bean.ArticleInfo;
 
+import java.util.List;
 import java.util.Map;
 
 public interface ArticleInfoService {
@@ -11,4 +12,6 @@ public interface ArticleInfoService {
     Boolean delArticleById(String checkId);
 
     ArticleInfo getArticleById(String id);
+
+    List<ArticleInfo> getArticleList(Integer page, String schoolId);
 }

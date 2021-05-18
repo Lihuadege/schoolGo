@@ -29,6 +29,8 @@ public class GoodsInfo implements Serializable {
 
     private String sysUserId;
 
+    private String schoolId;
+
     private String title;
 
     private String categoryId;

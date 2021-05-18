@@ -37,27 +37,9 @@
           "scene": null
         },
         {
-          "name": "测试功能",
-          "pathName": "pages/test/test",
-          "query": "",
-          "scene": null
-        },
-        {
-          "name": "订单页面",
-          "pathName": "pages/order/order",
-          "query": "",
-          "scene": null
-        },
-        {
           "name": "选择",
           "pathName": "pages/choose/choose",
           "query": "",
-          "scene": null
-        },
-        {
-          "name": "提交订单",
-          "pathName": "pages/orderSubmit/orderSubmit",
-          "query": "goodsId=14",
           "scene": null
         },
         {
@@ -67,8 +49,8 @@
           "scene": null
         },
         {
-          "name": "收藏表",
-          "pathName": "pages/goodsCollect/goodsCollect",
+          "name": "欢迎页面",
+          "pathName": "pages/welcome/welcome",
           "query": "",
           "scene": null
         }

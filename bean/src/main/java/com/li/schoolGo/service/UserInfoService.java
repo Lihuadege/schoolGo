@@ -8,4 +8,8 @@ public interface UserInfoService {
     UserInfo getNewUserInfo(UserInfo userInfo);
 
     UserInfo getUserInfoById(String userId);
+
+    Boolean updateSchoolIdByOpenId(String openId, String userSchoolId);
+
+    UserInfo getUserINfoByOpenId(String openId);
 }

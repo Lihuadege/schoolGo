@@ -8,6 +8,7 @@ Page({
         bannerList: [],
         noticeList: [],
         goodsList: [],
+        schoolId: undefined
     },
 
     currentPage: 1,
@@ -18,10 +19,11 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
+        let schoolId = wx.getStorageSync("schoolId");
+        this.setData({ schoolId })
         this.getBanners();
         this.getNotice();
         this.getGoods(this.currentPage);
-
     },
 
     /**
@@ -30,13 +32,15 @@ Page({
      * 定义一个当前页，分页大小直接由后端决定算了
      */
     getGoods: function(pages) {
-        requests("/listGoods", { page: pages }).then(result => {
+        let schoolId = this.data.schoolId;
+        requests("/listGoods", { page: pages, schoolId: schoolId }).then(result => {
             const total = result.total;
             this.totalPage = Math.ceil(total / 4);
             // console.log("总页数是" + this.totalPage + "，获取到的数据是"+total)
             this.setData({
-                goodsList: result.data
-            })
+                    goodsList: result.data
+                })
+                //下拉刷新有动画，要关闭动画
             wx.stopPullDownRefresh();
         })
     },
@@ -58,9 +62,10 @@ Page({
                 duration: 1000
             });
         } else {
+            let schoolId = this.data.schoolId;
             this.currentPage += 1;
             //下面还有数据，继续请求，注意原来数组不能直接覆盖数据
-            requests("/listGoods", { page: this.currentPage }).then(result => {
+            requests("/listGoods", { page: this.currentPage, schoolId: schoolId }).then(result => {
                 this.setData({
                     goodsList: [...this.data.goodsList, ...result.data]
                 })
@@ -83,14 +88,6 @@ Page({
             })
         })
     },
-
-    // toDetail(option){
-    //   let goodsId = option.currentTarget.dataset.goodsId;
-    //   console.log(option)
-    //   wx.navigateTo({
-    //     url: '/pages/detail/detail',
-    //   })
-    // },
 
     /**
      * 生命周期函数--监听页面初次渲染完成

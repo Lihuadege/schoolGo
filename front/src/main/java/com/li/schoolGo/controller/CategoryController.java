@@ -35,8 +35,8 @@ public class CategoryController {
      * @return
      */
     @RequestMapping("getGoodsList")
-    public Map<String, Object> getGoodsList(@RequestParam(value = "page", defaultValue = "1") Integer page, String categoryId){
-        Map<String, Object> retMap = goodsInfoService.getGoodsInfoByCategoryId(page, categoryId);
+    public Map<String, Object> getGoodsList(@RequestParam(value = "page", defaultValue = "1") Integer page, String categoryId, String schoolId){
+        Map<String, Object> retMap = goodsInfoService.getGoodsInfoByCategoryId(page, categoryId,schoolId);
         return retMap;
     }
 

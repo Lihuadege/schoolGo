@@ -5,6 +5,16 @@ import io.jsonwebtoken.*;
 import java.util.Map;
 
 public class JwtUtil {
+
+    public static String getOpenId(String token){
+        if (token == null || token.equals("")) {
+            return null;
+        }
+        Map<String, Object> map = JwtUtil.decode(token, "schoolGoUserOpenId");
+        String openId = (String) map.get("openId");
+        return openId;
+    }
+
     public static String encode(String key,Map<String,Object> param){
 
         JwtBuilder jwtBuilder = Jwts.builder().signWith(SignatureAlgorithm.HS256,key);

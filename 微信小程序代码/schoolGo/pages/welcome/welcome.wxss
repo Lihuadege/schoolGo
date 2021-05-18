@@ -1,0 +1,43 @@
+.title {
+    margin-top: 200rpx;
+    width: 100vw;
+    text-align: center;
+    font-size: 60rpx;
+}
+
+.second {
+    margin-top: 10rpx;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 300rpx;
+}
+
+.public {
+    width: 45%;
+    height: 100rpx;
+    text-align: center;
+    line-height: 100rpx;
+    border: rgb(204, 204, 204) solid 3rpx;
+    border-radius: 20rpx;
+}
+
+.left {
+    margin-right: 15rpx;
+}
+
+.right {
+    margin-left: 15rpx;
+}
+
+.submitBtn {
+    left: 120rpx;
+    position: fixed;
+    bottom: 40rpx;
+    width: 500rpx;
+    background-color: var(--themeColor);
+}

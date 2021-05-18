@@ -41,8 +41,8 @@ public class IndexController {
     }
 
     @RequestMapping("listGoods")
-    public Map<String, Object> listGoods(@RequestParam(value = "page", defaultValue = "1")Integer page){
-        Map<String, Object> retMap = goodsInfoService.getGoodsInfo(page);
+    public Map<String, Object> listGoods(@RequestParam(value = "page", defaultValue = "1")Integer page, String schoolId){
+        Map<String, Object> retMap = goodsInfoService.getGoodsInfo(page,schoolId);
         return retMap;
     }
 

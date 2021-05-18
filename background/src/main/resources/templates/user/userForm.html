@@ -61,12 +61,8 @@
                 <select name="userAreaId" id="userAreaId" lay-verify="required" >
                     <option th:if="${user == null}" value="0">请选择学校</option>
                     <!--此处表单select项回显默认选项勾选，怎么都不能成功，最后发现是对比数据类型不一致导致-->
-                    <option th:if="${user != null && user.userAreaId gt 34}"
-                            th:each="school : ${schoolInfos}" th:value="${school.id}" th:text="${school.name}"
+                    <option th:each="school : ${schoolInfos}" th:value="${school.id}" th:text="${school.name}"
                             th:selected="${user != null and user.userAreaId.toString() == school.id}"></option>
-
-
-                    <option th:if="${user != null && user.userAreaId lt 35}" value="0" readonly="true" selected>superManager,请勿修改</option>
                 </select>
             </div>
         </div>

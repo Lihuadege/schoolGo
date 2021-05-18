@@ -10,7 +10,8 @@ Page({
         activeId: 1,
         category: [],
         goodsList: [],
-        total: 0
+        total: 0,
+        schoolId: undefined
     },
 
     /**切换商品分类出发函数，改变categoryId和goodsList
@@ -37,6 +38,8 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
+        let schoolId = wx.getStorageSync("schoolId");
+        this.setData({ schoolId })
         this.getCategoryList();
         this.getGoods();
     },
@@ -51,7 +54,8 @@ Page({
         wx.showLoading({
             title: '加载中',
         })
-        requests("/getGoodsList", { page: nowPage, categoryId: thatCategoryId }).then(result => {
+        let schoolId = this.data.schoolId;
+        requests("/getGoodsList", { page: nowPage, categoryId: thatCategoryId, schoolId: schoolId }).then(result => {
             const total = result.total;
             this.setData({
                 total
@@ -80,8 +84,9 @@ Page({
             this.currentPage += 1;
             let nowPage = this.currentPage;
             let thatCategoryId = this.data.activeId;
+            let schoolId = this.data.schoolId;
             //下面还有数据，继续请求，注意原来数组不能直接覆盖数据
-            requests("/getGoodsList", { page: nowPage, categoryId: thatCategoryId }).then(result => {
+            requests("/getGoodsList", { page: nowPage, categoryId: thatCategoryId, schoolId: schoolId }).then(result => {
                 this.setData({
                     goodsList: [...this.data.goodsList, ...result.data]
                 })
