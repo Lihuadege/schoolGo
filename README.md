@@ -1,6 +1,23 @@
 # schoolGo
 毕业设计，开始于2021年1月8日。
 
+项目如果要运行，请先将sql文件导入到数据库里面。
+然后使用idea导入项目，修改位于front和background里面src->main->resource下面的application.properties文件：
+修改里面的数据库配置和Redis配置。
+前台微信小程序运行，请在导入项目之后，务必先运行后台服务器，然后在详情里勾选使用npm模块和不校验合法域名（因为微信小程序上线之后必须使用https加密域名才可以）。如果还不能运行，请参考微信小程序开发文档构建npm模块。
+微信小程序获取用户信息需要开发者的appid和secretid，这个需要在front/src/main/com/li/schoolGo/controller/LoginController中的方法里添加这两个参数，具体参加微信开发者文档。
+
+
+
+
+
+
+
+
+
+
+
+
 停了半个月，28号再来做发现当初的架构搭好以后持久层连不上数据库，琢磨几天重构
 
 重构完成，自定义拦截器，重定向页面时总是把静态资源当成Controller进行mapping映射，百般寻求无果，
