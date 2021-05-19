@@ -76,8 +76,9 @@ public class LoginController {
 
         //此处踩坑无数，首先设置get请求参数一开始用httpGet.setHeader()方法，但是行不通，改成url拼接
         //但是又发现{"errcode":40029,"errmsg":"invalid code, hints: [ req_id: cheB36yFe-tD2h0a ]"}错误，结果是测试小程序的appid与应用的appid不一致
+        //保护隐私，删除appid和secretid
         HttpGet httpGet =
-                new HttpGet("https://api.weixin.qq.com/sns/jscode2session?appid=wxd15709734753dba4&secret=c2cd7ef0a991a873abe550fd5d45f620&grant_type=authorization_code&js_code=" +
+                new HttpGet("https://api.weixin.qq.com/sns/jscode2session?grant_type=authorization_code&js_code=" +
                         code);
         CloseableHttpResponse response = null;
         try {
